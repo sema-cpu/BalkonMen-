@@ -19,12 +19,10 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
   return <>{children}</>
 }
 
-const generateStaticParams = () => {
+export const generateStaticParams = () => {
   return locales.map((locale) => ({ locale }))
 }
 
-const dynamicParams = false
+export const dynamicParams = false
 
-export { dynamicParams }
-export { generateStaticParams }
 export default LocaleLayout

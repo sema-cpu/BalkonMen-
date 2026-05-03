@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { FormEvent, Suspense, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { LockKeyhole } from "lucide-react"
@@ -8,7 +8,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import { hasSupabaseEnv } from "@/lib/supabase/env"
 import { Button } from "@/components/ui/button"
 
-const AdminLoginPage = () => {
+const AdminLoginForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
@@ -112,6 +112,14 @@ const AdminLoginPage = () => {
         </div>
       </section>
     </main>
+  )
+}
+
+const AdminLoginPage = () => {
+  return (
+    <Suspense fallback={null}>
+      <AdminLoginForm />
+    </Suspense>
   )
 }
 

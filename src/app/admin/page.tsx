@@ -33,15 +33,10 @@ type SiteContentEntryRow = Database["public"]["Tables"]["site_content_entries"][
 type SiteArticleRow = Database["public"]["Tables"]["site_articles"]["Row"]
 
 type AdminPageProps = {
-  readonly searchParams?:
-    | {
-        readonly status?: string
-        readonly contentLocale?: string
-      }
-    | Promise<{
-        readonly status?: string
-        readonly contentLocale?: string
-      }>
+  readonly searchParams?: Promise<{
+    readonly status?: string
+    readonly contentLocale?: string
+  }>
 }
 
 type StatCardProps = {

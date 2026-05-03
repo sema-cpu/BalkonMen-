@@ -131,13 +131,17 @@ const mergeStringContent = <T extends Record<string, string>>(defaults: T, candi
     return defaults
   }
 
-  return (Object.keys(defaults) as Array<keyof T>).reduce<T>((acc, key) => {
-    const value = candidate[key]
+  const candidateByKey = candidate as Partial<Record<Extract<keyof T, string>, unknown>>
+  const merged = { ...defaults } as Record<Extract<keyof T, string>, string>
+
+  ;(Object.keys(defaults) as Array<Extract<keyof T, string>>).forEach((key) => {
+    const value = candidateByKey[key]
     if (typeof value === "string") {
-      acc[key] = value
+      merged[key] = value
     }
-    return acc
-  }, { ...defaults })
+  })
+
+  return merged as T
 }
 
 const mergeLocalizedStringContent = <T extends Record<string, string>>(defaultsByLocale: LocalizedContent<T>, candidate: unknown, locale: Locale): T => {

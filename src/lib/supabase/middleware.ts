@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import type { SetAllCookies } from "@supabase/ssr"
 import { type NextRequest, NextResponse } from "next/server"
 import type { Database } from "@/types/database"
 import { isSupabaseRefreshTokenError } from "./auth-errors"
@@ -34,7 +35,7 @@ const updateSession = async (request: NextRequest) => {
       getAll() {
         return request.cookies.getAll()
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
         response = NextResponse.next({ request })
         cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
