@@ -6,4 +6,16 @@ const isSupabaseRefreshTokenError = (error: unknown) => {
   return /refresh token/i.test(error.message)
 }
 
-export { isSupabaseRefreshTokenError }
+const isSupabaseMissingSessionError = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  return /auth session missing/i.test(error.message)
+}
+
+const isRecoverableSupabaseAuthError = (error: unknown) => {
+  return isSupabaseRefreshTokenError(error) || isSupabaseMissingSessionError(error)
+}
+
+export { isRecoverableSupabaseAuthError, isSupabaseMissingSessionError, isSupabaseRefreshTokenError }

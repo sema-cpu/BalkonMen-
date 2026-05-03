@@ -21,7 +21,7 @@ import {
 import { defaultAboutContentByLocale, defaultContactContentByLocale, defaultHomeContentByLocale, mergeLocalizedStringContent } from "@/data/site-content"
 import { Button } from "@/components/ui/button"
 import { isLocale, type Locale } from "@/i18n/config"
-import { isSupabaseRefreshTokenError } from "@/lib/supabase/auth-errors"
+import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import type { Database } from "@/types/database"
@@ -90,7 +90,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
   } = await sessionClient.auth.getUser()
 
   if (userError) {
-    if (isSupabaseRefreshTokenError(userError)) {
+    if (isRecoverableSupabaseAuthError(userError)) {
       redirect("/admin/login")
     }
 

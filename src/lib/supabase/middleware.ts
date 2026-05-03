@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr"
 import type { SetAllCookies } from "@supabase/ssr"
 import { type NextRequest, NextResponse } from "next/server"
 import type { Database } from "@/types/database"
-import { isSupabaseRefreshTokenError } from "./auth-errors"
+import { isRecoverableSupabaseAuthError } from "./auth-errors"
 import { getSupabaseEnv, hasSupabaseEnv } from "./env"
 
 const applyAdminSecurityHeaders = (response: NextResponse) => {
@@ -53,7 +53,7 @@ const updateSession = async (request: NextRequest) => {
     error: userError
   } = await supabase.auth.getUser()
 
-  if (userError && !isSupabaseRefreshTokenError(userError)) {
+  if (userError && !isRecoverableSupabaseAuthError(userError)) {
     throw userError
   }
 

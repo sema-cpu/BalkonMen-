@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { isLocale, type Locale } from "@/i18n/config"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
-import { isSupabaseRefreshTokenError } from "@/lib/supabase/auth-errors"
+import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import type { ContentPage } from "@/types/site-content"
 import type { MenuTag } from "@/types/menu"
@@ -115,7 +115,7 @@ const getAuthenticatedUser = async () => {
   } = await sessionClient.auth.getUser()
 
   if (error) {
-    if (isSupabaseRefreshTokenError(error)) {
+    if (isRecoverableSupabaseAuthError(error)) {
       redirect("/admin/login")
     }
 
