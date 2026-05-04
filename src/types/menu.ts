@@ -5,6 +5,7 @@ export type MenuCategory = {
   name: string
   description: string
   order: number
+  icon?: string
 }
 
 export type MenuItem = {

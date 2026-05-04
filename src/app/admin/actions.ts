@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { isLocale, type Locale } from "@/i18n/config"
+import { normalizeMenuCategoryIconName } from "@/lib/menu-category-icons"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
@@ -436,6 +437,7 @@ const createCategoryAction = async (formData: FormData) => {
 
   const name = parseRequiredString(formData.get("name"), "Category name")
   const description = parseString(formData.get("description"))
+  const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
   const isActive = parseBoolean(formData.get("isActive"))
 
@@ -444,6 +446,7 @@ const createCategoryAction = async (formData: FormData) => {
     name_tr: name,
     description,
     description_tr: description,
+    icon_name: iconName,
     display_order: displayOrder,
     is_active: isActive
   })
@@ -463,6 +466,7 @@ const updateCategoryAction = async (formData: FormData) => {
   const categoryId = parseRequiredString(formData.get("categoryId"), "Category id")
   const name = parseRequiredString(formData.get("name"), "Category name")
   const description = parseString(formData.get("description"))
+  const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
   const isActive = parseBoolean(formData.get("isActive"))
 
@@ -470,6 +474,7 @@ const updateCategoryAction = async (formData: FormData) => {
     .from("menu_categories")
     .update({
       ...(contentLocale === "en" ? { name, description } : { name_tr: name, description_tr: description }),
+      icon_name: iconName,
       display_order: displayOrder,
       is_active: isActive
     })

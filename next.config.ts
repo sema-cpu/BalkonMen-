@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.myikas.com"
+      },
+      {
+        protocol: "https",
+        hostname: "i.hizliresim.com"
       }
     ]
   }

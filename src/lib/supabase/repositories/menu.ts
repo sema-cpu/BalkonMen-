@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache"
 import type { Locale } from "@/i18n/config"
+import { normalizeMenuCategoryIconName } from "@/lib/menu-category-icons"
 import { createSupabasePublicClient } from "@/lib/supabase/public"
 import type { MenuCategory, MenuItem, MenuTag } from "@/types/menu"
 import type { Database } from "@/types/database"
@@ -17,11 +18,14 @@ const resolveLocalizedString = (locale: Locale, english: string, turkish: string
 }
 
 const mapCategory = (row: CategoryRow, locale: Locale): MenuCategory => {
+  const icon = normalizeMenuCategoryIconName(row.icon_name ?? "")
+
   return {
     id: row.id,
     name: resolveLocalizedString(locale, row.name, row.name_tr),
     description: resolveLocalizedString(locale, row.description, row.description_tr),
-    order: row.display_order
+    order: row.display_order,
+    icon: icon || undefined
   }
 }
 

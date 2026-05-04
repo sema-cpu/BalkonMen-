@@ -8,6 +8,7 @@ type MenuCategorySeed = {
   name: LocalizedString
   description: LocalizedString
   order: number
+  icon?: string
 }
 
 type MenuItemSeed = {
@@ -27,25 +28,29 @@ const menuCategorySeeds: MenuCategorySeed[] = [
     id: "coffee",
     name: { en: "Coffee", tr: "Kahve" },
     description: { en: "Espresso-based favorites and hand-brewed selections", tr: "Espresso bazlı favoriler ve özel demleme seçenekleri" },
-    order: 1
+    order: 1,
+    icon: "coffee"
   },
   {
     id: "cold-drinks",
     name: { en: "Cold Drinks", tr: "Soğuk İçecekler" },
     description: { en: "Iced creations and refreshing signature blends", tr: "Buzlu seçenekler ve ferahlatıcı imza karışımlar" },
-    order: 2
+    order: 2,
+    icon: "cup-soda"
   },
   {
     id: "brunch",
     name: { en: "Brunch", tr: "Brunch" },
     description: { en: "All-day plates prepared with seasonal ingredients", tr: "Mevsimsel malzemelerle hazırlanan gün boyu tabaklar" },
-    order: 3
+    order: 3,
+    icon: "sandwich"
   },
   {
     id: "desserts",
     name: { en: "Desserts", tr: "Tatlılar" },
     description: { en: "Sweet pairings for every cup", tr: "Her fincana eşlik edecek tatlı dokunuşlar" },
-    order: 4
+    order: 4,
+    icon: "cake-slice"
   }
 ]
 
@@ -158,7 +163,8 @@ const getLocalizedMenuFallback = (locale: Locale): { categories: MenuCategory[];
         id: category.id,
         name: category.name[locale],
         description: category.description[locale],
-        order: category.order
+        order: category.order,
+        icon: category.icon
       }
     }),
     items: menuItemSeeds.map((item) => {

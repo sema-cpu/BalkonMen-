@@ -21,6 +21,7 @@ import {
 import { defaultAboutContentByLocale, defaultContactContentByLocale, defaultHomeContentByLocale, mergeLocalizedStringContent } from "@/data/site-content"
 import { Button } from "@/components/ui/button"
 import { isLocale, type Locale } from "@/i18n/config"
+import { menuCategoryIconOptions } from "@/lib/menu-category-icons"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
@@ -210,6 +211,12 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-5 py-8 sm:px-8" id="main-content">
+      <datalist id="category-icon-options">
+        {menuCategoryIconOptions.map((iconOption) => {
+          return <option key={iconOption.value} value={iconOption.value}>{iconOption.label}</option>
+        })}
+      </datalist>
+
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border/80 pb-5">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-primary/15 p-2">
@@ -842,6 +849,21 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <input className={inputClassName} defaultValue={category.display_order} id={`category-order-${category.id}`} name="displayOrder" required type="number" />
                         </div>
+                        <div>
+                          <label className="mb-2 block text-sm" htmlFor={`category-icon-${category.id}`}>
+                            Icon key
+                          </label>
+                          <input
+                            className={inputClassName}
+                            defaultValue={category.icon_name}
+                            id={`category-icon-${category.id}`}
+                            list="category-icon-options"
+                            name="iconName"
+                            placeholder="utensils-crossed"
+                            type="text"
+                          />
+                          <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
+                        </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`category-description-${category.id}`}>
                             Description
@@ -1111,6 +1133,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                   Display order
                 </label>
                 <input className={inputClassName} defaultValue={1} id="create-category-order" name="displayOrder" required type="number" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm" htmlFor="create-category-icon">
+                  Icon key
+                </label>
+                <input className={inputClassName} id="create-category-icon" list="category-icon-options" name="iconName" placeholder="utensils-crossed" type="text" />
+                <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-description">
