@@ -25,7 +25,8 @@ const mapCategory = (row: CategoryRow, locale: Locale): MenuCategory => {
     name: resolveLocalizedString(locale, row.name, row.name_tr),
     description: resolveLocalizedString(locale, row.description, row.description_tr),
     order: row.display_order,
-    icon: icon || undefined
+    icon: icon || undefined,
+    imageUrl: row.image_url.trim().length > 0 ? row.image_url : undefined
   }
 }
 

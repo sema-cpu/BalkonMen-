@@ -9,6 +9,7 @@ type MenuCategorySeed = {
   description: LocalizedString
   order: number
   icon?: string
+  imageUrl?: string
 }
 
 type MenuItemSeed = {
@@ -29,28 +30,32 @@ const menuCategorySeeds: MenuCategorySeed[] = [
     name: { en: "Coffee", tr: "Kahve" },
     description: { en: "Espresso-based favorites and hand-brewed selections", tr: "Espresso bazlı favoriler ve özel demleme seçenekleri" },
     order: 1,
-    icon: "coffee"
+    icon: "coffee",
+    imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "cold-drinks",
     name: { en: "Cold Drinks", tr: "Soğuk İçecekler" },
     description: { en: "Iced creations and refreshing signature blends", tr: "Buzlu seçenekler ve ferahlatıcı imza karışımlar" },
     order: 2,
-    icon: "cup-soda"
+    icon: "cup-soda",
+    imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "brunch",
     name: { en: "Brunch", tr: "Brunch" },
     description: { en: "All-day plates prepared with seasonal ingredients", tr: "Mevsimsel malzemelerle hazırlanan gün boyu tabaklar" },
     order: 3,
-    icon: "sandwich"
+    icon: "sandwich",
+    imageUrl: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "desserts",
     name: { en: "Desserts", tr: "Tatlılar" },
     description: { en: "Sweet pairings for every cup", tr: "Her fincana eşlik edecek tatlı dokunuşlar" },
     order: 4,
-    icon: "cake-slice"
+    icon: "cake-slice",
+    imageUrl: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80"
   }
 ]
 
@@ -164,7 +169,8 @@ const getLocalizedMenuFallback = (locale: Locale): { categories: MenuCategory[];
         name: category.name[locale],
         description: category.description[locale],
         order: category.order,
-        icon: category.icon
+        icon: category.icon,
+        imageUrl: category.imageUrl
       }
     }),
     items: menuItemSeeds.map((item) => {

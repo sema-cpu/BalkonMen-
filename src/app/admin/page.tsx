@@ -865,6 +865,20 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
                         </div>
                         <div className="md:col-span-2">
+                          <label className="mb-2 block text-sm" htmlFor={`category-image-${category.id}`}>
+                            Circle image URL
+                          </label>
+                          <input
+                            className={inputClassName}
+                            defaultValue={category.image_url}
+                            id={`category-image-${category.id}`}
+                            name="imageUrl"
+                            placeholder="https://images.example.com/category.jpg"
+                            type="url"
+                          />
+                          <p className="mt-1 text-xs text-muted-foreground">Used on top menu circles. Leave empty to use automatic fallback imagery.</p>
+                        </div>
+                        <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`category-description-${category.id}`}>
                             Description
                           </label>
@@ -1140,6 +1154,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 </label>
                 <input className={inputClassName} id="create-category-icon" list="category-icon-options" name="iconName" placeholder="utensils-crossed" type="text" />
                 <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm" htmlFor="create-category-image">
+                  Circle image URL
+                </label>
+                <input className={inputClassName} id="create-category-image" name="imageUrl" placeholder="https://images.example.com/category.jpg" type="url" />
+                <p className="mt-1 text-xs text-muted-foreground">Used on top menu circles. Leave empty to use automatic fallback imagery.</p>
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-description">

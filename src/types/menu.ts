@@ -6,6 +6,7 @@ export type MenuCategory = {
   description: string
   order: number
   icon?: string
+  imageUrl?: string
 }
 
 export type MenuItem = {

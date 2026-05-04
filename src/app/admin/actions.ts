@@ -438,6 +438,7 @@ const createCategoryAction = async (formData: FormData) => {
   const name = parseRequiredString(formData.get("name"), "Category name")
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
+  const imageUrl = parseOptionalString(formData.get("imageUrl"))
   const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
   const isActive = parseBoolean(formData.get("isActive"))
 
@@ -447,6 +448,7 @@ const createCategoryAction = async (formData: FormData) => {
     description,
     description_tr: description,
     icon_name: iconName,
+    image_url: imageUrl ?? "",
     display_order: displayOrder,
     is_active: isActive
   })
@@ -467,6 +469,7 @@ const updateCategoryAction = async (formData: FormData) => {
   const name = parseRequiredString(formData.get("name"), "Category name")
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
+  const imageUrl = parseOptionalString(formData.get("imageUrl"))
   const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
   const isActive = parseBoolean(formData.get("isActive"))
 
@@ -475,6 +478,7 @@ const updateCategoryAction = async (formData: FormData) => {
     .update({
       ...(contentLocale === "en" ? { name, description } : { name_tr: name, description_tr: description }),
       icon_name: iconName,
+      image_url: imageUrl ?? "",
       display_order: displayOrder,
       is_active: isActive
     })

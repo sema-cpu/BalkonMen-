@@ -1,6 +1,9 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { useFormStatus } from "react-dom"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -34,9 +37,17 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, disabled, type, ...props }, ref) => {
+    const { pending } = useFormStatus()
+    const shouldLockForPending = !asChild && type !== "button"
+    const isDisabled = Boolean(disabled) || (shouldLockForPending && pending)
     const Comp = asChild ? Slot : "button"
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+
+    if (asChild) {
+      return <Comp aria-disabled={isDisabled || undefined} className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+    }
+
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} disabled={isDisabled} ref={ref} type={type} {...props} />
   }
 )
 
