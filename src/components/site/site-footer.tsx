@@ -12,16 +12,16 @@ const SiteFooter = ({ locale }: SiteFooterProps) => {
     <footer className="mt-8 border-t border-border/80 py-8">
       <Container>
         <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Balkon Café. {locale === "tr" ? "Tum haklari saklidir." : "All rights reserved."}</p>
+          <p>© {new Date().getFullYear()} Balkon Café. Tum haklari saklidir.</p>
           <div className="flex flex-wrap items-center gap-4">
-            <Link aria-label={locale === "tr" ? "Hakkimizda sayfasi" : "About us page"} href={toLocalizedPath(locale, "/about")}>
-              {locale === "tr" ? "Hakkimizda" : "About Us"}
+            <Link aria-label="Hakkimizda sayfasi" href={toLocalizedPath(locale, "/about")}>
+              Hakkimizda
             </Link>
-            <Link aria-label={locale === "tr" ? "Iletisim sayfasi" : "Contact page"} href={toLocalizedPath(locale, "/contact")}>
-              {locale === "tr" ? "Iletisim" : "Contact"}
+            <Link aria-label="Iletisim sayfasi" href={toLocalizedPath(locale, "/contact")}>
+              Iletisim
             </Link>
-            <Link aria-label={locale === "tr" ? "Menu sayfasi" : "Menu page"} href={toLocalizedPath(locale, "/menu")}>
-              {locale === "tr" ? "Menu" : "Menu"}
+            <Link aria-label="Menu sayfasi" href={toLocalizedPath(locale, "/menu")}>
+              Menu
             </Link>
           </div>
         </div>

@@ -20,16 +20,10 @@ const gallery = [
   "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=80"
 ]
 
-const testimonials: Record<Locale, Array<{ quote: string; author: string }>> = {
-  en: [
-    { quote: "The ambiance feels premium but welcoming. Their oat flat white is unforgettable.", author: "Mina K." },
-    { quote: "Perfect place for both quick coffee runs and long creative afternoons.", author: "Arda T." }
-  ],
-  tr: [
-    { quote: "Atmosfer premium ama samimi. Yulafli flat white unutulmaz.", author: "Mina K." },
-    { quote: "Hem hizli kahve molasi hem uzun calisma saatleri icin harika bir yer.", author: "Arda T." }
-  ]
-}
+const testimonials: Array<{ quote: string; author: string }> = [
+  { quote: "Atmosfer premium ama samimi. Yulafli flat white unutulmaz.", author: "Mina K." },
+  { quote: "Hem hizli kahve molasi hem uzun calisma saatleri icin harika bir yer.", author: "Arda T." }
+]
 
 type LocalizedHomePageProps = {
   readonly params: Promise<{
@@ -157,7 +151,7 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
             title={t("Insanlar ne diyor", "What people say")}
           />
           <div className="grid gap-4 md:grid-cols-2">
-            {testimonials[locale].map((item) => {
+            {testimonials.map((item) => {
               return (
                 <article className="rounded-2xl border border-border/70 bg-card/60 p-6" key={item.author}>
                   <p className="mb-4 text-foreground">“{item.quote}”</p>

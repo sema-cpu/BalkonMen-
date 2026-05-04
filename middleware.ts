@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import { defaultLocale } from "@/i18n/config"
 import { updateSession } from "@/lib/supabase/middleware"
 
-const localizedPrefixes = ["/tr", "/en"]
+const localizedPrefixes = ["/tr"]
 const legacyPublicPaths = new Set(["/", "/about", "/contact", "/menu"])
 
 export const middleware = async (request: NextRequest) => {

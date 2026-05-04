@@ -1,24 +1,19 @@
 import { unstable_cache } from "next/cache"
-import { defaultAboutContentByLocale, defaultContactContentByLocale, defaultHomeContentByLocale, mergeLocalizedStringContent } from "@/data/site-content"
-import type { Locale } from "@/i18n/config"
+import { defaultAboutContent, defaultContactContent, defaultHomeContent, mergeStringContent } from "@/data/site-content"
 import { createSupabasePublicClient } from "@/lib/supabase/public"
 import type { Database } from "@/types/database"
-import type { ContentPage, SiteArticle, SiteContentBundle } from "@/types/site-content"
+import type { SiteArticle, SiteContentBundle } from "@/types/site-content"
 
 type SiteContentEntryRow = Database["public"]["Tables"]["site_content_entries"]["Row"]
 type SiteArticleRow = Database["public"]["Tables"]["site_articles"]["Row"]
 
-const mapArticle = (row: SiteArticleRow, locale: Locale): SiteArticle => {
-  const localizedTitle = locale === "tr" && row.title_tr.trim().length > 0 ? row.title_tr : row.title
-  const localizedExcerpt = locale === "tr" && row.excerpt_tr.trim().length > 0 ? row.excerpt_tr : row.excerpt
-  const localizedContent = locale === "tr" && row.content_tr.trim().length > 0 ? row.content_tr : row.content
-
+const mapArticle = (row: SiteArticleRow): SiteArticle => {
   return {
     id: row.id,
-    page: row.page as ContentPage,
-    title: localizedTitle,
-    excerpt: localizedExcerpt,
-    content: localizedContent,
+    page: row.page,
+    title: row.title,
+    excerpt: row.excerpt,
+    content: row.content,
     imageUrl: row.image_url,
     author: row.author,
     isPublished: row.is_published,
@@ -28,7 +23,7 @@ const mapArticle = (row: SiteArticleRow, locale: Locale): SiteArticle => {
 }
 
 const fetchPublicSiteContent = unstable_cache(
-  async (locale: Locale): Promise<SiteContentBundle> => {
+  async (): Promise<SiteContentBundle> => {
     const supabase = createSupabasePublicClient()
 
     const [entriesResponse, articlesResponse] = await Promise.all([
@@ -50,13 +45,13 @@ const fetchPublicSiteContent = unstable_cache(
     }, {})
 
     return {
-      home: mergeLocalizedStringContent(defaultHomeContentByLocale, entriesByKey.home, locale),
-      about: mergeLocalizedStringContent(defaultAboutContentByLocale, entriesByKey.about, locale),
-      contact: mergeLocalizedStringContent(defaultContactContentByLocale, entriesByKey.contact, locale),
-      articles: articlesResponse.data.map((article) => mapArticle(article, locale))
+      home: mergeStringContent(defaultHomeContent, entriesByKey.home),
+      about: mergeStringContent(defaultAboutContent, entriesByKey.about),
+      contact: mergeStringContent(defaultContactContent, entriesByKey.contact),
+      articles: articlesResponse.data.map((article) => mapArticle(article))
     }
   },
-  ["public-site-content-v2"],
+  ["public-site-content-v3"],
   {
     revalidate: 300,
     tags: ["site-content", "site-articles"]

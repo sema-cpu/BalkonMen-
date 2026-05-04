@@ -31,49 +31,40 @@ export type Database = {
         Row: {
           author: string
           content: string
-          content_tr: string
           created_at: string
           display_order: number
           excerpt: string
-          excerpt_tr: string
           id: string
           image_url: string | null
           is_published: boolean
           page: "home" | "about"
           title: string
-          title_tr: string
           updated_at: string
         }
         Insert: {
           author?: string
           content: string
-          content_tr?: string
           created_at?: string
           display_order?: number
           excerpt?: string
-          excerpt_tr?: string
           id?: string
           image_url?: string | null
           is_published?: boolean
           page?: "home" | "about"
           title: string
-          title_tr?: string
           updated_at?: string
         }
         Update: {
           author?: string
           content?: string
-          content_tr?: string
           created_at?: string
           display_order?: number
           excerpt?: string
-          excerpt_tr?: string
           id?: string
           image_url?: string | null
           is_published?: boolean
           page?: "home" | "about"
           title?: string
-          title_tr?: string
           updated_at?: string
         }
         Relationships: []
@@ -103,40 +94,34 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          description_tr: string
           display_order: number
           id: string
           icon_name: string
           image_url: string
           is_active: boolean
           name: string
-          name_tr: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string
-          description_tr?: string
           display_order?: number
           id?: string
           icon_name?: string
           image_url?: string
           is_active?: boolean
           name: string
-          name_tr?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string
-          description_tr?: string
           display_order?: number
           id?: string
           icon_name?: string
           image_url?: string
           is_active?: boolean
           name?: string
-          name_tr?: string
           updated_at?: string
         }
         Relationships: []
@@ -169,14 +154,12 @@ export type Database = {
           category_id: string
           created_at: string
           description: string
-          description_tr: string
           display_order: number
           id: string
           image_url: string | null
           is_available: boolean
           is_featured: boolean
           name: string
-          name_tr: string
           price: number
           updated_at: string
         }
@@ -184,14 +167,12 @@ export type Database = {
           category_id: string
           created_at?: string
           description?: string
-          description_tr?: string
           display_order?: number
           id?: string
           image_url?: string | null
           is_available?: boolean
           is_featured?: boolean
           name: string
-          name_tr?: string
           price: number
           updated_at?: string
         }
@@ -199,14 +180,12 @@ export type Database = {
           category_id?: string
           created_at?: string
           description?: string
-          description_tr?: string
           display_order?: number
           id?: string
           image_url?: string | null
           is_available?: boolean
           is_featured?: boolean
           name?: string
-          name_tr?: string
           price?: number
           updated_at?: string
         }

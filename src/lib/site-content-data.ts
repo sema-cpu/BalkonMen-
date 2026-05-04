@@ -1,5 +1,5 @@
 import { cache } from "react"
-import { defaultAboutContentByLocale, defaultContactContentByLocale, defaultHomeContentByLocale } from "@/data/site-content"
+import { defaultAboutContent, defaultContactContent, defaultHomeContent } from "@/data/site-content"
 import type { Locale } from "@/i18n/config"
 import { hasSupabaseEnv } from "@/lib/supabase/env"
 import { fetchPublicSiteContent } from "@/lib/supabase/repositories/site-content"
@@ -10,17 +10,19 @@ type SiteContentDataResult = SiteContentBundle & {
 }
 
 const getSiteContentData = cache(async (locale: Locale): Promise<SiteContentDataResult> => {
+  void locale
+
   if (!hasSupabaseEnv()) {
     return {
-      home: defaultHomeContentByLocale[locale],
-      about: defaultAboutContentByLocale[locale],
-      contact: defaultContactContentByLocale[locale],
+      home: defaultHomeContent,
+      about: defaultAboutContent,
+      contact: defaultContactContent,
       articles: [],
       source: "local"
     }
   }
 
-  const data = await fetchPublicSiteContent(locale)
+  const data = await fetchPublicSiteContent()
   return {
     ...data,
     source: "supabase"

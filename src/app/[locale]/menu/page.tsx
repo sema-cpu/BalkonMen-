@@ -45,7 +45,6 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
   const resolvedSearchParams = searchParams instanceof Promise ? await searchParams : searchParams
   const locale: Locale = isLocale(localeParam) ? localeParam : "tr"
   const t = <T,>(tr: T, en: T) => (locale === "tr" ? tr : en)
-  const alternateLocale: Locale = locale === "tr" ? "en" : "tr"
 
   const viewMode = resolvedSearchParams?.view === "table" ? "table" : "list"
 
@@ -101,11 +100,6 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild size="default" variant="outline">
-              <Link aria-label={t("Dili degistir", "Switch language")} href={buildMenuHref(alternateLocale, viewMode, selectedCategoryId)}>
-                {alternateLocale.toUpperCase()}
-              </Link>
-            </Button>
             <Button asChild size="default" variant="secondary">
               <Link aria-label={t("Tanitim sitesine git", "Navigate to promotional website")} href={toLocalizedPath(locale, "/")}>
                 <Globe aria-hidden className="size-4" />
@@ -227,7 +221,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
 
         {displayedItems.length > 0 ? (
           viewMode === "list" ? (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {displayedItems.map((item) => {
                 return <MenuCard item={item} key={item.id} locale={locale} />
               })}
@@ -255,7 +249,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                           <td className="px-4 py-3 font-medium text-foreground">{item.name}</td>
                           <td className="px-4 py-3 text-muted-foreground">{item.description}</td>
                           <td className="px-4 py-3 text-muted-foreground">{item.tags.join(", ") || "-"}</td>
-                          <td className="px-4 py-3 text-right font-medium text-primary">${item.price.toFixed(2)}</td>
+                          <td className="px-4 py-3 text-right font-medium text-primary">₺{item.price.toFixed(2)}</td>
                         </tr>
                       )
                     })}
@@ -274,7 +268,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                           <p className="text-xs uppercase tracking-wide text-muted-foreground">{itemCategoryName}</p>
                           <p className="font-medium text-foreground">{item.name}</p>
                         </div>
-                        <p className="text-sm font-medium text-primary">${item.price.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-primary">₺{item.price.toFixed(2)}</p>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{item.description}</p>
                       <p className="mt-2 text-[11px] uppercase tracking-wide text-muted-foreground">{item.tags.join(" • ") || t("Etiket yok", "No tags")}</p>

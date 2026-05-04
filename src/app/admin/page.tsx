@@ -18,9 +18,8 @@ import {
   updateMenuItemAction,
   updateSiteArticleAction
 } from "@/app/admin/actions"
-import { defaultAboutContentByLocale, defaultContactContentByLocale, defaultHomeContentByLocale, mergeLocalizedStringContent } from "@/data/site-content"
+import { defaultAboutContent, defaultContactContent, defaultHomeContent, mergeStringContent } from "@/data/site-content"
 import { Button } from "@/components/ui/button"
-import { isLocale, type Locale } from "@/i18n/config"
 import { menuCategoryIconOptions } from "@/lib/menu-category-icons"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
@@ -36,7 +35,7 @@ type SiteArticleRow = Database["public"]["Tables"]["site_articles"]["Row"]
 type AdminPageProps = {
   readonly searchParams?: Promise<{
     readonly status?: string
-    readonly contentLocale?: string
+    readonly workspace?: string
   }>
 }
 
@@ -46,6 +45,8 @@ type StatCardProps = {
   readonly hint: string
   readonly icon: ReactNode
 }
+
+type AdminWorkspace = "overview" | "content" | "articles" | "categories" | "products"
 
 const statusMessageMap: Record<string, string> = {
   "admin-initialized": "Admin access initialized successfully",
@@ -81,6 +82,14 @@ const StatCard = ({ title, value, hint, icon }: StatCardProps) => {
     </article>
   )
 }
+
+const adminWorkspaceItems: Array<{ id: AdminWorkspace; label: string }> = [
+  { id: "overview", label: "Overview" },
+  { id: "content", label: "Content" },
+  { id: "articles", label: "Articles" },
+  { id: "categories", label: "Categories" },
+  { id: "products", label: "Products" }
+]
 
 const AdminPage = async ({ searchParams }: AdminPageProps) => {
   const resolvedSearchParams = searchParams instanceof Promise ? await searchParams : searchParams
@@ -172,24 +181,14 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
   const siteEntries = siteEntriesResponse.data as SiteContentEntryRow[]
   const siteArticles = siteArticlesResponse.data as SiteArticleRow[]
 
-  const contentLocale: Locale = isLocale(resolvedSearchParams?.contentLocale ?? "") ? (resolvedSearchParams?.contentLocale as Locale) : "tr"
-
   const entriesByKey = siteEntries.reduce<Record<string, SiteContentEntryRow["value"]>>((acc, entry) => {
     acc[entry.key] = entry.value
     return acc
   }, {})
 
-  const homeContent = mergeLocalizedStringContent(defaultHomeContentByLocale, entriesByKey.home, contentLocale)
-  const aboutContent = mergeLocalizedStringContent(defaultAboutContentByLocale, entriesByKey.about, contentLocale)
-  const contactContent = mergeLocalizedStringContent(defaultContactContentByLocale, entriesByKey.contact, contentLocale)
-
-  const resolveLocalizedText = (englishText: string, turkishText: string) => {
-    if (contentLocale === "tr" && turkishText.trim().length > 0) {
-      return turkishText
-    }
-
-    return englishText
-  }
+  const homeContent = mergeStringContent(defaultHomeContent, entriesByKey.home)
+  const aboutContent = mergeStringContent(defaultAboutContent, entriesByKey.about)
+  const contactContent = mergeStringContent(defaultContactContent, entriesByKey.contact)
 
   const tagsByItem = menuTags.reduce<Record<string, string[]>>((acc, tag) => {
     const currentTags = acc[tag.item_id] ?? []
@@ -198,7 +197,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
   }, {})
 
   const categoryNameById = categories.reduce<Record<string, string>>((acc, category) => {
-    acc[category.id] = resolveLocalizedText(category.name, category.name_tr)
+    acc[category.id] = category.name
     return acc
   }, {})
 
@@ -208,6 +207,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
   const featuredProductCount = menuItems.filter((item) => item.is_featured).length
   const publishedArticleCount = siteArticles.filter((article) => article.is_published).length
   const hasCategories = categories.length > 0
+  const requestedWorkspace = resolvedSearchParams?.workspace ?? "overview"
+  const workspace: AdminWorkspace = adminWorkspaceItems.some((item) => item.id === requestedWorkspace) ? (requestedWorkspace as AdminWorkspace) : "overview"
+  const buildAdminHref = (nextWorkspace: AdminWorkspace) => {
+    const query = new URLSearchParams()
+    query.set("workspace", nextWorkspace)
+    return `/admin?${query.toString()}`
+  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-5 py-8 sm:px-8" id="main-content">
@@ -254,33 +260,51 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
       ) : null}
 
       <section className="mb-6 rounded-lg border border-border/80 bg-card/70 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-medium">Content language</p>
-            <p className="text-xs text-muted-foreground">Switch language to edit Turkish or English content for all dynamic sections.</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button asChild variant={contentLocale === "en" ? "secondary" : "outline"}>
-              <Link href="/admin?contentLocale=en">English</Link>
-            </Button>
-            <Button asChild variant={contentLocale === "tr" ? "secondary" : "outline"}>
-              <Link href="/admin?contentLocale=tr">Turkish</Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {adminWorkspaceItems.map((workspaceItem) => {
+            return (
+              <Button asChild key={workspaceItem.id} variant={workspace === workspaceItem.id ? "secondary" : "outline"}>
+                <Link href={buildAdminHref(workspaceItem.id)}>{workspaceItem.label}</Link>
+              </Button>
+            )
+          })}
         </div>
       </section>
 
-      <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard hint={`${activeCategoryCount} visible`} icon={<Layers3 aria-hidden className="size-4" />} title="Categories" value={String(categories.length)} />
-        <StatCard hint={`${availableProductCount} available`} icon={<Package aria-hidden className="size-4" />} title="Products" value={String(menuItems.length)} />
-        <StatCard hint="Highlights on public pages" icon={<Sparkles aria-hidden className="size-4" />} title="Featured products" value={String(featuredProductCount)} />
-        <StatCard hint={`${publishedArticleCount} published`} icon={<FileText aria-hidden className="size-4" />} title="Articles" value={String(siteArticles.length)} />
-        <StatCard hint="Home, About, Contact" icon={<Globe2 aria-hidden className="size-4" />} title="Content sections" value="3" />
-      </section>
+      {workspace === "overview" ? (
+        <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <StatCard hint={`${activeCategoryCount} visible`} icon={<Layers3 aria-hidden className="size-4" />} title="Categories" value={String(categories.length)} />
+          <StatCard hint={`${availableProductCount} available`} icon={<Package aria-hidden className="size-4" />} title="Products" value={String(menuItems.length)} />
+          <StatCard hint="Highlights on public pages" icon={<Sparkles aria-hidden className="size-4" />} title="Featured products" value={String(featuredProductCount)} />
+          <StatCard hint={`${publishedArticleCount} published`} icon={<FileText aria-hidden className="size-4" />} title="Articles" value={String(siteArticles.length)} />
+          <StatCard hint="Home, About, Contact" icon={<Globe2 aria-hidden className="size-4" />} title="Content sections" value="3" />
+        </section>
+      ) : null}
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr),400px]">
         <section className="space-y-6">
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="website-content">
+          {workspace === "overview" ? (
+            <section className="rounded-xl border border-border/80 bg-card/70 p-6">
+              <h2 className="font-heading text-2xl">Workspace Overview</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Choose a workspace tab to focus on a single management area and reduce visual clutter.</p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <Button asChild variant="outline">
+                  <Link href={buildAdminHref("content")}>Open Content Workspace</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={buildAdminHref("articles")}>Open Articles Workspace</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={buildAdminHref("categories")}>Open Categories Workspace</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={buildAdminHref("products")}>Open Products Workspace</Link>
+                </Button>
+              </div>
+            </section>
+          ) : null}
+
+          {workspace === "content" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="website-content">
             <div className="mb-5">
               <h2 className="font-heading text-2xl">Website Content (CMS)</h2>
               <p className="mt-1 text-sm text-muted-foreground">Edit all marketing texts, descriptions, and contact details used by public pages.</p>
@@ -290,7 +314,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 <summary className="cursor-pointer list-none px-4 py-3 font-medium">Homepage Content</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateHomeContentAction} className="grid gap-3 md:grid-cols-2">
-                    <input name="contentLocale" type="hidden" value={contentLocale} />
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-hero-badge">
                         Hero badge
@@ -412,7 +435,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 <summary className="cursor-pointer list-none px-4 py-3 font-medium">About Page Content</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateAboutContentAction} className="grid gap-3 md:grid-cols-2">
-                    <input name="contentLocale" type="hidden" value={contentLocale} />
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-badge">
                         Badge
@@ -563,7 +585,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 <summary className="cursor-pointer list-none px-4 py-3 font-medium">Contact Page Content</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateContactContentAction} className="grid gap-3 md:grid-cols-2">
-                    <input name="contentLocale" type="hidden" value={contentLocale} />
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-badge">
                         Badge
@@ -668,9 +689,9 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 </div>
               </details>
             </div>
-          </section>
+          </section> : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-articles">
+          {workspace === "articles" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-articles">
             <div className="mb-5">
               <h2 className="font-heading text-2xl">Manage Articles</h2>
               <p className="mt-1 text-sm text-muted-foreground">Articles can be published on Home or About pages dynamically.</p>
@@ -686,7 +707,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                   <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={article.id} open={index === 0}>
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
                       <div>
-                        <p className="font-medium text-foreground">{resolveLocalizedText(article.title, article.title_tr)}</p>
+                        <p className="font-medium text-foreground">{article.title}</p>
                         <p className="text-xs text-muted-foreground">
                           {article.page.toUpperCase()} • {article.author}
                         </p>
@@ -706,7 +727,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </summary>
                     <div className="border-t border-border/70 px-4 py-4">
                       <form action={updateSiteArticleAction} className="grid gap-3 md:grid-cols-2">
-                        <input name="contentLocale" type="hidden" value={contentLocale} />
                         <input name="articleId" type="hidden" value={article.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`article-title-${article.id}`}>
@@ -714,7 +734,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <input
                             className={inputClassName}
-                            defaultValue={resolveLocalizedText(article.title, article.title_tr)}
+                            defaultValue={article.title}
                             id={`article-title-${article.id}`}
                             name="title"
                             required
@@ -748,7 +768,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <textarea
                             className={textareaClassName}
-                            defaultValue={resolveLocalizedText(article.excerpt, article.excerpt_tr)}
+                            defaultValue={article.excerpt}
                             id={`article-excerpt-${article.id}`}
                             name="excerpt"
                           />
@@ -759,7 +779,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <textarea
                             className="min-h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring"
-                            defaultValue={resolveLocalizedText(article.content, article.content_tr)}
+                            defaultValue={article.content}
                             id={`article-content-${article.id}`}
                             name="content"
                             required
@@ -792,9 +812,9 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 )
               })}
             </div>
-          </section>
+          </section> : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-categories">
+          {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-categories">
             <div className="mb-5">
               <h2 className="font-heading text-2xl">Manage Categories</h2>
               <p className="mt-1 text-sm text-muted-foreground">Edit visibility, order, and details without leaving this page.</p>
@@ -810,8 +830,8 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                   <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={category.id} open={index === 0}>
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
                       <div>
-                        <p className="font-medium text-foreground">{resolveLocalizedText(category.name, category.name_tr)}</p>
-                        <p className="text-xs text-muted-foreground">{resolveLocalizedText(category.description, category.description_tr) || "No description"}</p>
+                        <p className="font-medium text-foreground">{category.name}</p>
+                        <p className="text-xs text-muted-foreground">{category.description || "No description"}</p>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
                         <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Order {category.display_order}</span>
@@ -828,7 +848,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </summary>
                     <div className="border-t border-border/70 px-4 py-4">
                       <form action={updateCategoryAction} className="grid gap-3 md:grid-cols-2">
-                        <input name="contentLocale" type="hidden" value={contentLocale} />
                         <input name="categoryId" type="hidden" value={category.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`category-name-${category.id}`}>
@@ -836,7 +855,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <input
                             className={inputClassName}
-                            defaultValue={resolveLocalizedText(category.name, category.name_tr)}
+                            defaultValue={category.name}
                             id={`category-name-${category.id}`}
                             name="name"
                             required
@@ -884,7 +903,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <textarea
                             className={textareaClassName}
-                            defaultValue={resolveLocalizedText(category.description, category.description_tr)}
+                            defaultValue={category.description}
                             id={`category-description-${category.id}`}
                             name="description"
                           />
@@ -909,9 +928,9 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 )
               })}
             </div>
-          </section>
+          </section> : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-products">
+          {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-products">
             <div className="mb-5">
               <h2 className="font-heading text-2xl">Manage Products</h2>
               <p className="mt-1 text-sm text-muted-foreground">All product settings are grouped per item for faster edits.</p>
@@ -930,7 +949,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                   <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={item.id} open={index === 0}>
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
                       <div>
-                        <p className="font-medium text-foreground">{resolveLocalizedText(item.name, item.name_tr)}</p>
+                        <p className="font-medium text-foreground">{item.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {categoryName} • ${item.price.toFixed(2)}
                         </p>
@@ -952,7 +971,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </summary>
                     <div className="border-t border-border/70 px-4 py-4">
                       <form action={updateMenuItemAction} className="grid gap-3 md:grid-cols-2">
-                        <input name="contentLocale" type="hidden" value={contentLocale} />
                         <input name="itemId" type="hidden" value={item.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`item-name-${item.id}`}>
@@ -960,7 +978,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <input
                             className={inputClassName}
-                            defaultValue={resolveLocalizedText(item.name, item.name_tr)}
+                            defaultValue={item.name}
                             id={`item-name-${item.id}`}
                             name="name"
                             required
@@ -975,7 +993,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                             {categories.map((category) => {
                               return (
                                 <option key={category.id} value={category.id}>
-                                  {resolveLocalizedText(category.name, category.name_tr)}
+                                  {category.name}
                                 </option>
                               )
                             })}
@@ -999,7 +1017,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                           </label>
                           <textarea
                             className={textareaClassName}
-                            defaultValue={resolveLocalizedText(item.description, item.description_tr)}
+                            defaultValue={item.description}
                             id={`item-description-${item.id}`}
                             name="description"
                           />
@@ -1041,43 +1059,28 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 )
               })}
             </div>
-          </section>
+          </section> : null}
         </section>
 
         <aside className="space-y-6 xl:sticky xl:top-6">
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6">
-            <h2 className="font-heading text-xl">Quick Navigation</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Jump to any management section.</p>
-            <div className="mt-4 grid gap-2">
-              <Button asChild variant="outline">
-                <a href="#website-content">Website Content</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#manage-articles">Manage Articles</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#manage-categories">Manage Categories</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#manage-products">Manage Products</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#create-article">Create Article</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#create-category">Create Category</a>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#create-product">Create Product</a>
-              </Button>
-            </div>
-          </section>
+          {workspace === "overview" ? (
+            <section className="rounded-xl border border-border/80 bg-card/70 p-6">
+              <h2 className="font-heading text-xl">Design Plan</h2>
+              <p className="mt-1 text-sm text-muted-foreground">The admin panel is now split into focused workspaces to improve speed, readability, and reduce editing mistakes.</p>
+              <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+                <p>1. <span className="text-foreground">Overview</span> for key metrics and quick access.</p>
+                <p>2. <span className="text-foreground">Content</span> for homepage/about/contact copy editing.</p>
+                <p>3. <span className="text-foreground">Articles</span> for listing and article create/update/delete.</p>
+                <p>4. <span className="text-foreground">Categories</span> for menu grouping and circle image/icon setup.</p>
+                <p>5. <span className="text-foreground">Products</span> for item availability, pricing, and metadata.</p>
+              </div>
+            </section>
+          ) : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-article">
+          {workspace === "articles" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-article">
             <h2 className="font-heading text-xl">Create Article</h2>
             <p className="mt-1 text-sm text-muted-foreground">Add a new article for Home or About pages.</p>
             <form action={createSiteArticleAction} className="mt-4 grid gap-3">
-              <input name="contentLocale" type="hidden" value={contentLocale} />
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-title">
                   Title
@@ -1129,13 +1132,12 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
               </label>
               <Button type="submit">Create Article</Button>
             </form>
-          </section>
+          </section> : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-category">
+          {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-category">
             <h2 className="font-heading text-xl">Create Category</h2>
             <p className="mt-1 text-sm text-muted-foreground">Add a new menu group with ordering and visibility.</p>
             <form action={createCategoryAction} className="mt-4 grid gap-3">
-              <input name="contentLocale" type="hidden" value={contentLocale} />
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-name">
                   Name
@@ -1174,9 +1176,9 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
               </label>
               <Button type="submit">Create Category</Button>
             </form>
-          </section>
+          </section> : null}
 
-          <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-product">
+          {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-product">
             <h2 className="font-heading text-xl">Create Product</h2>
             <p className="mt-1 text-sm text-muted-foreground">Add a new menu item with pricing, tags, and availability.</p>
             {!hasCategories ? (
@@ -1185,7 +1187,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
               </p>
             ) : null}
             <form action={createMenuItemAction} className="mt-4 grid gap-3">
-              <input name="contentLocale" type="hidden" value={contentLocale} />
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-name">
                   Product name
@@ -1200,7 +1201,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                   {categories.map((category) => {
                     return (
                       <option key={category.id} value={category.id}>
-                        {resolveLocalizedText(category.name, category.name_tr)}
+                        {category.name}
                       </option>
                     )
                   })}
@@ -1248,7 +1249,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                 Create Product
               </Button>
             </form>
-          </section>
+          </section> : null}
         </aside>
       </div>
     </main>

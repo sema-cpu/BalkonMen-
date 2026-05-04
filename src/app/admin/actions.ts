@@ -2,7 +2,6 @@
 
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { isLocale, type Locale } from "@/i18n/config"
 import { normalizeMenuCategoryIconName } from "@/lib/menu-category-icons"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
@@ -79,16 +78,6 @@ const parseContentPage = (value: FormDataEntryValue | null): ContentPage => {
   return parsed
 }
 
-const parseLocale = (value: FormDataEntryValue | null): Locale => {
-  const parsed = String(value ?? "").trim()
-
-  if (!isLocale(parsed)) {
-    throw new Error("Locale must be either tr or en")
-  }
-
-  return parsed
-}
-
 const revalidatePublicAndAdminPaths = () => {
   revalidatePath("/")
   revalidatePath("/about")
@@ -98,10 +87,6 @@ const revalidatePublicAndAdminPaths = () => {
   revalidatePath("/tr/about")
   revalidatePath("/tr/contact")
   revalidatePath("/tr/menu")
-  revalidatePath("/en")
-  revalidatePath("/en/about")
-  revalidatePath("/en/contact")
-  revalidatePath("/en/menu")
   revalidatePath("/admin")
   revalidateTag("menu-data")
   revalidateTag("site-content")
@@ -142,74 +127,9 @@ const ensureAdminAccess = async () => {
   return { supabaseAdmin, user }
 }
 
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-}
-
-const normalizeSiteContentEntryValue = (value: unknown): Record<Locale, Record<string, string>> => {
-  const fallback = { en: {}, tr: {} } as Record<Locale, Record<string, string>>
-
-  if (!isRecord(value)) {
-    return fallback
-  }
-
-  const englishCandidate = value.en
-  const turkishCandidate = value.tr
-
-  if (isRecord(englishCandidate) || isRecord(turkishCandidate)) {
-    const english = isRecord(englishCandidate) ? englishCandidate : {}
-    const turkish = isRecord(turkishCandidate) ? turkishCandidate : {}
-
-    return {
-      en: Object.entries(english).reduce<Record<string, string>>((acc, [key, entryValue]) => {
-        if (typeof entryValue === "string") {
-          acc[key] = entryValue
-        }
-
-        return acc
-      }, {}),
-      tr: Object.entries(turkish).reduce<Record<string, string>>((acc, [key, entryValue]) => {
-        if (typeof entryValue === "string") {
-          acc[key] = entryValue
-        }
-
-        return acc
-      }, {})
-    }
-  }
-
-  const shared = Object.entries(value).reduce<Record<string, string>>((acc, [key, entryValue]) => {
-    if (typeof entryValue === "string") {
-      acc[key] = entryValue
-    }
-
-    return acc
-  }, {})
-
-  return {
-    en: shared,
-    tr: shared
-  }
-}
-
-const upsertSiteContentEntry = async (key: "home" | "about" | "contact", locale: Locale, value: Record<string, string>) => {
+const upsertSiteContentEntry = async (key: "home" | "about" | "contact", value: Record<string, string>) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const { data: existingEntry, error: existingEntryError } = await supabaseAdmin.from("site_content_entries").select("value").eq("key", key).maybeSingle()
-
-  if (existingEntryError) {
-    throw existingEntryError
-  }
-
-  const normalizedValue = normalizeSiteContentEntryValue(existingEntry?.value)
-  normalizedValue[locale] = value
-
-  const alternateLocale: Locale = locale === "tr" ? "en" : "tr"
-
-  if (Object.keys(normalizedValue[alternateLocale]).length === 0) {
-    normalizedValue[alternateLocale] = value
-  }
-
-  const { error } = await supabaseAdmin.from("site_content_entries").upsert({ key, value: normalizedValue }, { onConflict: "key" })
+  const { error } = await supabaseAdmin.from("site_content_entries").upsert({ key, value }, { onConflict: "key" })
 
   if (error) {
     throw error
@@ -264,8 +184,6 @@ const initializeAdminAccessAction = async () => {
 }
 
 const updateHomeContentAction = async (formData: FormData) => {
-  const contentLocale = parseLocale(formData.get("contentLocale"))
-
   const homeContent = {
     heroBadge: parseRequiredString(formData.get("heroBadge"), "Hero badge"),
     heroTitle: parseRequiredString(formData.get("heroTitle"), "Hero title"),
@@ -285,14 +203,12 @@ const updateHomeContentAction = async (formData: FormData) => {
     visitDescription: parseRequiredString(formData.get("visitDescription"), "Visit description")
   }
 
-  await upsertSiteContentEntry("home", contentLocale, homeContent)
+  await upsertSiteContentEntry("home", homeContent)
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=site-home-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=site-home-updated")
 }
 
 const updateAboutContentAction = async (formData: FormData) => {
-  const contentLocale = parseLocale(formData.get("contentLocale"))
-
   const aboutContent = {
     badge: parseRequiredString(formData.get("badge"), "About badge"),
     title: parseRequiredString(formData.get("title"), "About title"),
@@ -313,14 +229,12 @@ const updateAboutContentAction = async (formData: FormData) => {
     journeyDescription: parseRequiredString(formData.get("journeyDescription"), "Journey description")
   }
 
-  await upsertSiteContentEntry("about", contentLocale, aboutContent)
+  await upsertSiteContentEntry("about", aboutContent)
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=site-about-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=site-about-updated")
 }
 
 const updateContactContentAction = async (formData: FormData) => {
-  const contentLocale = parseLocale(formData.get("contentLocale"))
-
   const contactContent = {
     badge: parseRequiredString(formData.get("badge"), "Contact badge"),
     title: parseRequiredString(formData.get("title"), "Contact title"),
@@ -337,14 +251,13 @@ const updateContactContentAction = async (formData: FormData) => {
     mapUrl: parseRequiredString(formData.get("mapUrl"), "Map URL")
   }
 
-  await upsertSiteContentEntry("contact", contentLocale, contactContent)
+  await upsertSiteContentEntry("contact", contactContent)
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=site-contact-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=site-contact-updated")
 }
 
 const createSiteArticleAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const page = parseContentPage(formData.get("page"))
   const title = parseRequiredString(formData.get("title"), "Article title")
@@ -358,11 +271,8 @@ const createSiteArticleAction = async (formData: FormData) => {
   const { error } = await supabaseAdmin.from("site_articles").insert({
     page,
     title,
-    title_tr: title,
     excerpt,
-    excerpt_tr: excerpt,
     content,
-    content_tr: content,
     image_url: imageUrl,
     author,
     display_order: displayOrder,
@@ -374,12 +284,11 @@ const createSiteArticleAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=site-article-created&contentLocale=${contentLocale}`)
+  redirect("/admin?status=site-article-created")
 }
 
 const updateSiteArticleAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const articleId = parseRequiredString(formData.get("articleId"), "Article id")
   const page = parseContentPage(formData.get("page"))
@@ -395,7 +304,9 @@ const updateSiteArticleAction = async (formData: FormData) => {
     .from("site_articles")
     .update({
       page,
-      ...(contentLocale === "en" ? { title, excerpt, content } : { title_tr: title, excerpt_tr: excerpt, content_tr: content }),
+      title,
+      excerpt,
+      content,
       image_url: imageUrl,
       author,
       display_order: displayOrder,
@@ -408,7 +319,7 @@ const updateSiteArticleAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=site-article-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=site-article-updated")
 }
 
 const deleteSiteArticleAction = async (formData: FormData) => {
@@ -433,7 +344,6 @@ const deleteSiteArticleAction = async (formData: FormData) => {
 
 const createCategoryAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const name = parseRequiredString(formData.get("name"), "Category name")
   const description = parseString(formData.get("description"))
@@ -444,9 +354,7 @@ const createCategoryAction = async (formData: FormData) => {
 
   const { error } = await supabaseAdmin.from("menu_categories").insert({
     name,
-    name_tr: name,
     description,
-    description_tr: description,
     icon_name: iconName,
     image_url: imageUrl ?? "",
     display_order: displayOrder,
@@ -458,12 +366,11 @@ const createCategoryAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=category-created&contentLocale=${contentLocale}`)
+  redirect("/admin?status=category-created")
 }
 
 const updateCategoryAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const categoryId = parseRequiredString(formData.get("categoryId"), "Category id")
   const name = parseRequiredString(formData.get("name"), "Category name")
@@ -476,7 +383,8 @@ const updateCategoryAction = async (formData: FormData) => {
   const { error } = await supabaseAdmin
     .from("menu_categories")
     .update({
-      ...(contentLocale === "en" ? { name, description } : { name_tr: name, description_tr: description }),
+      name,
+      description,
       icon_name: iconName,
       image_url: imageUrl ?? "",
       display_order: displayOrder,
@@ -489,7 +397,7 @@ const updateCategoryAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=category-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=category-updated")
 }
 
 const deleteCategoryAction = async (formData: FormData) => {
@@ -514,7 +422,6 @@ const deleteCategoryAction = async (formData: FormData) => {
 
 const createMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const categoryId = parseRequiredString(formData.get("categoryId"), "Category")
   const name = parseRequiredString(formData.get("name"), "Product name")
@@ -531,9 +438,7 @@ const createMenuItemAction = async (formData: FormData) => {
     .insert({
       category_id: categoryId,
       name,
-      name_tr: name,
       description,
-      description_tr: description,
       price,
       image_url: imageUrl,
       display_order: displayOrder,
@@ -563,12 +468,11 @@ const createMenuItemAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=product-created&contentLocale=${contentLocale}`)
+  redirect("/admin?status=product-created")
 }
 
 const updateMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
-  const contentLocale = parseLocale(formData.get("contentLocale"))
 
   const itemId = parseRequiredString(formData.get("itemId"), "Item id")
   const categoryId = parseRequiredString(formData.get("categoryId"), "Category")
@@ -585,7 +489,8 @@ const updateMenuItemAction = async (formData: FormData) => {
     .from("menu_items")
     .update({
       category_id: categoryId,
-      ...(contentLocale === "en" ? { name, description } : { name_tr: name, description_tr: description }),
+      name,
+      description,
       price,
       image_url: imageUrl,
       display_order: displayOrder,
@@ -620,7 +525,7 @@ const updateMenuItemAction = async (formData: FormData) => {
   }
 
   revalidatePublicAndAdminPaths()
-  redirect(`/admin?status=product-updated&contentLocale=${contentLocale}`)
+  redirect("/admin?status=product-updated")
 }
 
 const deleteMenuItemAction = async (formData: FormData) => {

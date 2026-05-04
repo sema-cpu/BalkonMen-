@@ -10,16 +10,18 @@ type MenuCardProps = {
   readonly className?: string
 }
 
-const tagLabelMap: Record<MenuItem["tags"][number], Record<Locale, string>> = {
-  vegan: { en: "Vegan", tr: "Vegan" },
-  vegetarian: { en: "Vegetarian", tr: "Vejetaryen" },
-  spicy: { en: "Spicy", tr: "Acılı" },
-  containsNuts: { en: "Contains Nuts", tr: "Kuruyemiş İçerir" },
-  glutenFree: { en: "Gluten Free", tr: "Glutensiz" },
-  bestseller: { en: "Bestseller", tr: "Çok Tercih Edilen" }
+const tagLabelMap: Record<MenuItem["tags"][number], string> = {
+  vegan: "Vegan",
+  vegetarian: "Vejetaryen",
+  spicy: "Acılı",
+  containsNuts: "Kuruyemiş İçerir",
+  glutenFree: "Glutensiz",
+  bestseller: "Çok Tercih Edilen"
 }
 
 const MenuCard = ({ item, locale, className }: MenuCardProps) => {
+  void locale
+
   return (
     <article
       aria-label={`${item.name} menu item`}
@@ -36,7 +38,7 @@ const MenuCard = ({ item, locale, className }: MenuCardProps) => {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-secondary text-sm text-muted-foreground">
-            {locale === "tr" ? "Gorsel yakinda" : "Image coming soon"}
+            Gorsel yakinda
           </div>
         )}
       </div>
@@ -44,15 +46,15 @@ const MenuCard = ({ item, locale, className }: MenuCardProps) => {
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-heading text-xl text-foreground">{item.name}</h3>
           <p className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-            ${item.price.toFixed(2)}
+            ₺{item.price.toFixed(2)}
           </p>
         </div>
         <p className="text-sm text-muted-foreground">{item.description}</p>
         <div className="flex flex-wrap gap-2">
           {item.tags.map((tag) => {
-            return <PillBadge className="normal-case tracking-normal" key={tag} label={tagLabelMap[tag][locale]} />
+            return <PillBadge className="normal-case tracking-normal" key={tag} label={tagLabelMap[tag]} />
           })}
-          {!item.isAvailable ? <PillBadge className="border-destructive/35 bg-destructive/10 text-destructive" label={locale === "tr" ? "Tukendi" : "Sold Out"} /> : null}
+          {!item.isAvailable ? <PillBadge className="border-destructive/35 bg-destructive/10 text-destructive" label="Tukendi" /> : null}
         </div>
       </div>
     </article>

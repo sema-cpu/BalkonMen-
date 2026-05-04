@@ -1,5 +1,4 @@
 import { unstable_cache } from "next/cache"
-import type { Locale } from "@/i18n/config"
 import { normalizeMenuCategoryIconName } from "@/lib/menu-category-icons"
 import { createSupabasePublicClient } from "@/lib/supabase/public"
 import type { MenuCategory, MenuItem, MenuTag } from "@/types/menu"
@@ -9,33 +8,25 @@ type MenuItemRow = Database["public"]["Tables"]["menu_items"]["Row"]
 type CategoryRow = Database["public"]["Tables"]["menu_categories"]["Row"]
 type TagRow = Database["public"]["Tables"]["menu_item_tags"]["Row"]
 
-const resolveLocalizedString = (locale: Locale, english: string, turkish: string | null) => {
-  if (locale === "tr" && turkish && turkish.trim().length > 0) {
-    return turkish
-  }
-
-  return english
-}
-
-const mapCategory = (row: CategoryRow, locale: Locale): MenuCategory => {
+const mapCategory = (row: CategoryRow): MenuCategory => {
   const icon = normalizeMenuCategoryIconName(row.icon_name ?? "")
 
   return {
     id: row.id,
-    name: resolveLocalizedString(locale, row.name, row.name_tr),
-    description: resolveLocalizedString(locale, row.description, row.description_tr),
+    name: row.name,
+    description: row.description,
     order: row.display_order,
     icon: icon || undefined,
     imageUrl: row.image_url.trim().length > 0 ? row.image_url : undefined
   }
 }
 
-const mapItem = (row: MenuItemRow, tags: MenuTag[], locale: Locale): MenuItem => {
+const mapItem = (row: MenuItemRow, tags: MenuTag[]): MenuItem => {
   return {
     id: row.id,
     categoryId: row.category_id,
-    name: resolveLocalizedString(locale, row.name, row.name_tr),
-    description: resolveLocalizedString(locale, row.description, row.description_tr),
+    name: row.name,
+    description: row.description,
     price: row.price,
     image: row.image_url ?? undefined,
     tags,
@@ -45,7 +36,7 @@ const mapItem = (row: MenuItemRow, tags: MenuTag[], locale: Locale): MenuItem =>
 }
 
 const getPublicMenuData = unstable_cache(
-  async (locale: Locale) => {
+  async () => {
     const supabase = createSupabasePublicClient()
 
     const [categoriesResponse, itemsResponse, tagsResponse] = await Promise.all([
@@ -74,10 +65,10 @@ const getPublicMenuData = unstable_cache(
 
     return {
       categories: categoriesResponse.data.map((category) => {
-        return mapCategory(category, locale)
+        return mapCategory(category)
       }),
       items: itemsResponse.data.map((item) => {
-        return mapItem(item, tagsByItemId[item.id] ?? [], locale)
+        return mapItem(item, tagsByItemId[item.id] ?? [])
       })
     }
   },

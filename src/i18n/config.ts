@@ -1,4 +1,4 @@
-const locales = ["tr", "en"] as const
+const locales = ["tr"] as const
 type Locale = (typeof locales)[number]
 
 const defaultLocale: Locale = "tr"

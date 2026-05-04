@@ -22,7 +22,7 @@ const getMenuData = cache(async (locale: Locale): Promise<MenuData> => {
     }
   }
 
-  const data = await getPublicMenuData(locale)
+  const data = await getPublicMenuData()
   return {
     categories: data.categories,
     items: data.items,

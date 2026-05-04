@@ -5,11 +5,7 @@ const sitemap = (): MetadataRoute.Sitemap => {
     { locale: "tr", path: "", priority: 1, changeFrequency: "weekly" as const },
     { locale: "tr", path: "/menu", priority: 0.9, changeFrequency: "daily" as const },
     { locale: "tr", path: "/about", priority: 0.8, changeFrequency: "monthly" as const },
-    { locale: "tr", path: "/contact", priority: 0.8, changeFrequency: "monthly" as const },
-    { locale: "en", path: "", priority: 1, changeFrequency: "weekly" as const },
-    { locale: "en", path: "/menu", priority: 0.9, changeFrequency: "daily" as const },
-    { locale: "en", path: "/about", priority: 0.8, changeFrequency: "monthly" as const },
-    { locale: "en", path: "/contact", priority: 0.8, changeFrequency: "monthly" as const }
+    { locale: "tr", path: "/contact", priority: 0.8, changeFrequency: "monthly" as const }
   ]
 
   return [
