@@ -239,7 +239,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
       {statusMessage ? (
         <section
           aria-live="polite"
-          className="mb-6 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
+          className="mb-6 flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-sm text-success"
         >
           <CheckCircle2 aria-hidden className="size-4" />
           {statusMessage}
@@ -689,8 +689,8 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <span
                           className={`rounded-full px-2 py-1 ${
                             article.is_published
-                              ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-200"
-                              : "border border-amber-500/30 bg-amber-500/10 text-amber-200"
+                              ? "border border-success/30 bg-success/10 text-success"
+                              : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
                           {article.is_published ? "Published" : "Draft"}
@@ -811,8 +811,8 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <span
                           className={`rounded-full px-2 py-1 ${
                             category.is_active
-                              ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-200"
-                              : "border border-amber-500/30 bg-amber-500/10 text-amber-200"
+                              ? "border border-success/30 bg-success/10 text-success"
+                              : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
                           {category.is_active ? "Visible" : "Hidden"}
@@ -903,8 +903,8 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <span
                           className={`rounded-full px-2 py-1 ${
                             item.is_available
-                              ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-200"
-                              : "border border-amber-500/30 bg-amber-500/10 text-amber-200"
+                              ? "border border-success/30 bg-success/10 text-success"
+                              : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
                           {item.is_available ? "Available" : "Unavailable"}
@@ -1130,7 +1130,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
             <h2 className="font-heading text-xl">Create Product</h2>
             <p className="mt-1 text-sm text-muted-foreground">Add a new menu item with pricing, tags, and availability.</p>
             {!hasCategories ? (
-              <p className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+              <p className="mt-3 rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
                 Create at least one category before adding products.
               </p>
             ) : null}

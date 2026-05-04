@@ -52,7 +52,7 @@ const MenuCard = ({ item, locale, className }: MenuCardProps) => {
           {item.tags.map((tag) => {
             return <PillBadge className="normal-case tracking-normal" key={tag} label={tagLabelMap[tag][locale]} />
           })}
-          {!item.isAvailable ? <PillBadge className="border-rose-500/40 bg-rose-500/15 text-rose-200" label={locale === "tr" ? "Tukendi" : "Sold Out"} /> : null}
+          {!item.isAvailable ? <PillBadge className="border-destructive/35 bg-destructive/10 text-destructive" label={locale === "tr" ? "Tukendi" : "Sold Out"} /> : null}
         </div>
       </div>
     </article>

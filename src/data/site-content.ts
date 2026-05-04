@@ -5,7 +5,7 @@ type LocalizedContent<T extends Record<string, string>> = Record<Locale, T>
 
 const defaultHomeContentByLocale: LocalizedContent<HomeContent> = {
   en: {
-    heroBadge: "Modern dark café experience",
+    heroBadge: "Modern soft café experience",
     heroTitle: "Crafted coffee, elevated ambiance",
     heroDescription: "Discover artisan brews, seasonal brunch, and a refined atmosphere built for calm mornings and slow evenings.",
     signatureTitle: "Signature Promise",
@@ -24,7 +24,7 @@ const defaultHomeContentByLocale: LocalizedContent<HomeContent> = {
     visitDescription: "Kültür Avenue 24, Istanbul • Mon-Sun 08:00-22:30 • +90 212 000 00 00"
   },
   tr: {
-    heroBadge: "Modern karanlık kafe deneyimi",
+    heroBadge: "Modern yumuşak kafe deneyimi",
     heroTitle: "Özenle hazırlanmış kahve, seçkin atmosfer",
     heroDescription: "Sakin sabahlar ve uzun akşamlar için tasarlanmış rafine bir ortamda, zanaat kahveleri ve mevsimsel brunch lezzetlerini keşfedin.",
     signatureTitle: "İmza yaklaşımımız",

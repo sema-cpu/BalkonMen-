@@ -70,7 +70,7 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
                 </Button>
               </div>
             </div>
-            <div className="rounded-2xl border border-border/80 bg-card/70 p-6 shadow-2xl shadow-black/20 backdrop-blur-sm sm:p-8">
+            <div className="rounded-2xl border border-border/80 bg-card/70 p-6 shadow-2xl shadow-primary/10 backdrop-blur-sm sm:p-8">
               <p className="mb-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary">
                 <Sparkles aria-hidden className="size-3.5" />
                 {homeContent.signatureTitle}

@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     default: "Balkon Café | Artisan Coffee & Brunch",
     template: "%s | Balkon Café"
   },
-  description: "Dark and elegant café experience with QR-first menu flow and premium in-store ambiance",
-  keywords: ["cafe", "coffee", "brunch", "qr menu", "dark ui", "istanbul cafe"],
+  description: "Soft and elegant café experience with QR-first menu flow and premium in-store ambiance",
+  keywords: ["cafe", "coffee", "brunch", "qr menu", "soft ui", "istanbul cafe"],
   openGraph: {
     title: "Balkon Café | Artisan Coffee & Brunch",
     description: "Discover artisan coffee, seasonal brunch, and a QR-first menu experience.",
@@ -52,7 +52,7 @@ type RootLayoutProps = {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html className="dark" lang="tr">
+    <html lang="tr">
       <body className={`${inter.variable} ${playfair.variable}`}>
         <a
           className="sr-only fixed left-3 top-3 z-50 rounded-md bg-background px-3 py-2 text-sm text-foreground focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-ring"
