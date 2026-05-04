@@ -25,7 +25,7 @@ const AdminLoginForm = () => {
     setIsSubmitting(true)
 
     if (!hasSupabaseEnv()) {
-      setErrorMessage("Supabase environment variables are missing. Add values from .env.example first.")
+      setErrorMessage("Supabase ortam degiskenleri eksik. Once .env.example dosyasindaki degerleri ekleyin.")
       setIsSubmitting(false)
       return
     }
@@ -51,19 +51,19 @@ const AdminLoginForm = () => {
             <LockKeyhole aria-hidden className="size-5 text-primary" />
           </div>
           <div>
-            <h1 className="font-heading text-2xl">Admin Sign In</h1>
-            <p className="text-sm text-muted-foreground">Secure access to menu management</p>
+            <h1 className="font-heading text-2xl">Yonetici Girisi</h1>
+            <p className="text-sm text-muted-foreground">Menu yonetimine guvenli erisim</p>
           </div>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {setupStatus === "missing-env" ? (
             <p className="rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-              Admin login is blocked until Supabase variables are configured in your environment.
+              Supabase degiskenleri ortaminizda tanimlanana kadar yonetici girisi engellenir.
             </p>
           ) : null}
           <label className="block text-sm text-foreground" htmlFor="email">
-            Email
+            E-posta
           </label>
           <input
             autoComplete="email"
@@ -78,7 +78,7 @@ const AdminLoginForm = () => {
           />
 
           <label className="block text-sm text-foreground" htmlFor="password">
-            Password
+            Sifre
           </label>
           <input
             autoComplete="current-password"
@@ -98,15 +98,15 @@ const AdminLoginForm = () => {
           ) : null}
 
           <Button className="w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? "Signing in..." : "Sign in"}
+            {isSubmitting ? "Giris yapiliyor..." : "Giris Yap"}
           </Button>
         </form>
 
         <div className="mt-5 border-t border-border/80 pt-4 text-sm text-muted-foreground">
           <p>
-            Return to{" "}
-            <Link aria-label="Go to website homepage" className="text-primary hover:text-primary/80" href="/">
-              website
+            Geri don:{" "}
+            <Link aria-label="Site ana sayfasina git" className="text-primary hover:text-primary/80" href="/">
+              site
             </Link>
           </p>
         </div>

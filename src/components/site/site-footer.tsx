@@ -21,7 +21,7 @@ const SiteFooter = ({ locale }: SiteFooterProps) => {
               Iletisim
             </Link>
             <Link aria-label="Menu sayfasi" href={toLocalizedPath(locale, "/menu")}>
-              Menu
+              Menü
             </Link>
           </div>
         </div>

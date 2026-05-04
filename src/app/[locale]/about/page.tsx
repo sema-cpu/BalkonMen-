@@ -13,8 +13,8 @@ import { toLocalizedPath } from "@/i18n/routing"
 import { getPublishedArticlesByPage, getSiteContentData } from "@/lib/site-content-data"
 
 export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn the story, values, and craft behind Balkon Café."
+  title: "Hakkimizda",
+  description: "Balkon Café'nin hikayesini, degerlerini ve zanaat anlayisini kesfedin."
 }
 
 type LocalizedAboutPageProps = {
@@ -50,13 +50,13 @@ const LocalizedAboutPage = async ({ params }: LocalizedAboutPageProps) => {
               <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">{aboutContent.intro}</p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
-                  <Link aria-label={t("Menu sayfasini ac", "Open menu page")} href={toLocalizedPath(locale, "/menu")}>
-                    {t("Menuyu Kesfet", "Explore Menu")} <ArrowRight aria-hidden className="size-4" />
+                  <Link aria-label={t("Menu sayfasini ac", "Menu sayfasini ac")} href={toLocalizedPath(locale, "/menu")}>
+                    {t("Menuyu Kesfet", "Menuyu Kesfet")} <ArrowRight aria-hidden className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="secondary">
-                  <Link aria-label={t("Iletisim sayfasini ac", "Open contact page")} href={toLocalizedPath(locale, "/contact")}>
-                    {t("Iletisime Gec", "Contact Us")}
+                  <Link aria-label={t("Iletisim sayfasini ac", "Iletisim sayfasini ac")} href={toLocalizedPath(locale, "/contact")}>
+                    {t("Iletisime Gec", "Iletisime Gec")}
                   </Link>
                 </Button>
               </div>
@@ -91,7 +91,7 @@ const LocalizedAboutPage = async ({ params }: LocalizedAboutPageProps) => {
           <HeadingBlock description={aboutContent.journeyDescription} eyebrow={aboutContent.journeyEyebrow} title={aboutContent.journeyTitle} />
           {siteContentData.source === "local" ? (
             <p className="mb-5 text-xs text-primary/90">
-              {t("Hakkimizda sayfasi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "About page content is currently using local defaults. Connect Supabase env values for live editing.")}
+              {t("Hakkimizda sayfasi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "Hakkimizda sayfasi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.")}
             </p>
           ) : null}
           {aboutArticles.length > 0 ? (
@@ -108,7 +108,7 @@ const LocalizedAboutPage = async ({ params }: LocalizedAboutPageProps) => {
             </div>
           ) : (
             <div className="rounded-xl border border-border/70 bg-card/60 p-5 text-sm text-muted-foreground">
-              {t("Yayimlanmis hakkimizda makaleleri eklendiginde burada gorunecek.", "Published about-page articles will appear here after they are added.")}
+              {t("Yayimlanmis hakkimizda makaleleri eklendiginde burada gorunecek.", "Yayimlanmis hakkimizda makaleleri eklendiginde burada gorunecek.")}
             </div>
           )}
         </Container>

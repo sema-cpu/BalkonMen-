@@ -9,14 +9,14 @@ type MenuCategoryIconOption = {
 const defaultMenuCategoryIconName = "utensils-crossed"
 
 const menuCategoryIconOptions: MenuCategoryIconOption[] = [
-  { value: "coffee", label: "Coffee" },
-  { value: "cup-soda", label: "Cold Drink" },
-  { value: "sandwich", label: "Sandwich" },
-  { value: "soup", label: "Soup" },
-  { value: "leafy-green", label: "Salad / Vegan" },
-  { value: "cake-slice", label: "Dessert" },
-  { value: "ice-cream-bowl", label: "Ice Cream" },
-  { value: "utensils-crossed", label: "Generic Category (Default)" }
+  { value: "coffee", label: "Kahve" },
+  { value: "cup-soda", label: "Soguk Icecek" },
+  { value: "sandwich", label: "Sandvic" },
+  { value: "soup", label: "Corba" },
+  { value: "leafy-green", label: "Salata / Vegan" },
+  { value: "cake-slice", label: "Tatli" },
+  { value: "ice-cream-bowl", label: "Dondurma" },
+  { value: "utensils-crossed", label: "Genel Kategori (Varsayilan)" }
 ]
 
 const iconByName: Record<string, LucideIcon> = {

@@ -15,7 +15,7 @@ const navItems = [
   { href: "/" as const, label: "Ana Sayfa" },
   { href: "/about" as const, label: "Hakkimizda" },
   { href: "/contact" as const, label: "Iletisim" },
-  { href: "/menu" as const, label: "Menu" }
+  { href: "/menu" as const, label: "Menü" }
 ] as const
 
 const SiteHeader = ({ locale, activePath = "/" }: SiteHeaderProps) => {

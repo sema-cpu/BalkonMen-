@@ -49,19 +49,19 @@ type StatCardProps = {
 type AdminWorkspace = "overview" | "content" | "articles" | "categories" | "products"
 
 const statusMessageMap: Record<string, string> = {
-  "admin-initialized": "Admin access initialized successfully",
-  "category-created": "Category created successfully",
-  "category-updated": "Category updated successfully",
-  "category-deleted": "Category deleted successfully",
-  "product-created": "Product created successfully",
-  "product-updated": "Product updated successfully",
-  "product-deleted": "Product deleted successfully",
-  "site-home-updated": "Homepage content updated successfully",
-  "site-about-updated": "About page content updated successfully",
-  "site-contact-updated": "Contact page content updated successfully",
-  "site-article-created": "Article created successfully",
-  "site-article-updated": "Article updated successfully",
-  "site-article-deleted": "Article deleted successfully"
+  "admin-initialized": "Yonetici erisimi basariyla olusturuldu",
+  "category-created": "Kategori basariyla olusturuldu",
+  "category-updated": "Kategori basariyla guncellendi",
+  "category-deleted": "Kategori basariyla silindi",
+  "product-created": "Urun basariyla olusturuldu",
+  "product-updated": "Urun basariyla guncellendi",
+  "product-deleted": "Urun basariyla silindi",
+  "site-home-updated": "Ana sayfa icerigi basariyla guncellendi",
+  "site-about-updated": "Hakkimizda sayfasi icerigi basariyla guncellendi",
+  "site-contact-updated": "Iletisim sayfasi icerigi basariyla guncellendi",
+  "site-article-created": "Makale basariyla olusturuldu",
+  "site-article-updated": "Makale basariyla guncellendi",
+  "site-article-deleted": "Makale basariyla silindi"
 }
 
 const inputClassName =
@@ -84,11 +84,11 @@ const StatCard = ({ title, value, hint, icon }: StatCardProps) => {
 }
 
 const adminWorkspaceItems: Array<{ id: AdminWorkspace; label: string }> = [
-  { id: "overview", label: "Overview" },
-  { id: "content", label: "Content" },
-  { id: "articles", label: "Articles" },
-  { id: "categories", label: "Categories" },
-  { id: "products", label: "Products" }
+  { id: "overview", label: "Genel Bakis" },
+  { id: "content", label: "Icerik" },
+  { id: "articles", label: "Makaleler" },
+  { id: "categories", label: "Kategoriler" },
+  { id: "products", label: "Urunler" }
 ]
 
 const AdminPage = async ({ searchParams }: AdminPageProps) => {
@@ -136,23 +136,23 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
             <div className="rounded-lg bg-primary/15 p-2">
               <ShieldCheck aria-hidden className="size-5 text-primary" />
             </div>
-            <h1 className="font-heading text-2xl">Admin Access Missing</h1>
+            <h1 className="font-heading text-2xl">Yonetici Erisimi Yok</h1>
           </div>
           <p className="text-sm text-muted-foreground">
             {canInitializeAdmin
-              ? "No admin account exists yet. You can initialize this signed-in account as the first admin."
-              : "This authenticated user is not listed in admin_profiles. Ask an existing admin to grant you access."}
+              ? "Henuz bir yonetici hesabi yok. Bu oturumu ilk yonetici olarak baslatabilirsiniz."
+              : "Bu kullanici admin_profiles tablosunda bulunmuyor. Mevcut bir yoneticiden erisim isteyin."}
           </p>
           {canInitializeAdmin ? (
             <form action={initializeAdminAccessAction} className="mt-5">
-              <Button type="submit">Initialize this account as admin</Button>
+              <Button type="submit">Bu hesabi yonetici olarak baslat</Button>
             </form>
           ) : null}
           <div className="mt-4">
             <Button asChild variant="ghost">
-              <Link aria-label="Back to homepage" href="/">
+              <Link aria-label="Ana sayfaya don" href="/">
                 <ArrowLeft aria-hidden className="size-4" />
-                Website
+                Site
               </Link>
             </Button>
           </div>
@@ -229,21 +229,21 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
             <ShieldCheck aria-hidden className="size-5 text-primary" />
           </div>
           <div>
-            <h1 className="font-heading text-2xl">Admin Panel</h1>
-            <p className="text-sm text-muted-foreground">Client-editable CMS + menu operations in one place</p>
+            <h1 className="font-heading text-2xl">Yonetim Paneli</h1>
+            <p className="text-sm text-muted-foreground">Musteri tarafindan duzenlenebilir CMS ve menu islemleri tek yerde</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost">
-            <Link aria-label="Back to homepage" href="/">
+            <Link aria-label="Ana sayfaya don" href="/">
               <ArrowLeft aria-hidden className="size-4" />
-              Website
+              Site
             </Link>
           </Button>
           <form action={signOutAdminAction}>
-            <Button aria-label="Sign out from admin" type="submit" variant="outline">
+            <Button aria-label="Yonetimden cikis yap" type="submit" variant="outline">
               <LogOut aria-hidden className="size-4" />
-              Sign out
+              Cikis Yap
             </Button>
           </form>
         </div>
@@ -273,11 +273,11 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
       {workspace === "overview" ? (
         <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          <StatCard hint={`${activeCategoryCount} visible`} icon={<Layers3 aria-hidden className="size-4" />} title="Categories" value={String(categories.length)} />
-          <StatCard hint={`${availableProductCount} available`} icon={<Package aria-hidden className="size-4" />} title="Products" value={String(menuItems.length)} />
-          <StatCard hint="Highlights on public pages" icon={<Sparkles aria-hidden className="size-4" />} title="Featured products" value={String(featuredProductCount)} />
-          <StatCard hint={`${publishedArticleCount} published`} icon={<FileText aria-hidden className="size-4" />} title="Articles" value={String(siteArticles.length)} />
-          <StatCard hint="Home, About, Contact" icon={<Globe2 aria-hidden className="size-4" />} title="Content sections" value="3" />
+          <StatCard hint={`${activeCategoryCount} gorunur`} icon={<Layers3 aria-hidden className="size-4" />} title="Kategoriler" value={String(categories.length)} />
+          <StatCard hint={`${availableProductCount} mevcut`} icon={<Package aria-hidden className="size-4" />} title="Urunler" value={String(menuItems.length)} />
+          <StatCard hint="Halka acik sayfalardaki one cikanlar" icon={<Sparkles aria-hidden className="size-4" />} title="One Cikan Urunler" value={String(featuredProductCount)} />
+          <StatCard hint={`${publishedArticleCount} yayinda`} icon={<FileText aria-hidden className="size-4" />} title="Makaleler" value={String(siteArticles.length)} />
+          <StatCard hint="Ana Sayfa, Hakkimizda, Iletisim" icon={<Globe2 aria-hidden className="size-4" />} title="Icerik Bolumleri" value="3" />
         </section>
       ) : null}
 
@@ -285,20 +285,20 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
         <section className="space-y-6">
           {workspace === "overview" ? (
             <section className="rounded-xl border border-border/80 bg-card/70 p-6">
-              <h2 className="font-heading text-2xl">Workspace Overview</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Choose a workspace tab to focus on a single management area and reduce visual clutter.</p>
+              <h2 className="font-heading text-2xl">Calisma Alani Ozeti</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Tek bir yonetim alanina odaklanmak ve goruntu karmasasini azaltmak icin sekmelerden birini secin.</p>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 <Button asChild variant="outline">
-                  <Link href={buildAdminHref("content")}>Open Content Workspace</Link>
+                  <Link href={buildAdminHref("content")}>Icerik Alani Ac</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href={buildAdminHref("articles")}>Open Articles Workspace</Link>
+                  <Link href={buildAdminHref("articles")}>Makaleler Alani Ac</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href={buildAdminHref("categories")}>Open Categories Workspace</Link>
+                  <Link href={buildAdminHref("categories")}>Kategoriler Alani Ac</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href={buildAdminHref("products")}>Open Products Workspace</Link>
+                  <Link href={buildAdminHref("products")}>Urunler Alani Ac</Link>
                 </Button>
               </div>
             </section>
@@ -306,53 +306,53 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
           {workspace === "content" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="website-content">
             <div className="mb-5">
-              <h2 className="font-heading text-2xl">Website Content (CMS)</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Edit all marketing texts, descriptions, and contact details used by public pages.</p>
+              <h2 className="font-heading text-2xl">Site Icerigi (CMS)</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Halka acik sayfalarda kullanilan tum metinleri, aciklamalari ve iletisim bilgilerini duzenleyin.</p>
             </div>
             <div className="space-y-3">
               <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" open>
-                <summary className="cursor-pointer list-none px-4 py-3 font-medium">Homepage Content</summary>
+                <summary className="cursor-pointer list-none px-4 py-3 font-medium">Ana Sayfa Icerigi</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateHomeContentAction} className="grid gap-3 md:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-hero-badge">
-                        Hero badge
+                        Hero rozeti
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.heroBadge} id="home-hero-badge" name="heroBadge" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="home-hero-title">
-                        Hero title
+                        Hero basligi
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.heroTitle} id="home-hero-title" name="heroTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="home-hero-description">
-                        Hero description
+                        Hero aciklamasi
                       </label>
                       <textarea className={textareaClassName} defaultValue={homeContent.heroDescription} id="home-hero-description" name="heroDescription" required />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-signature-title">
-                        Signature title
+                        Imza basligi
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.signatureTitle} id="home-signature-title" name="signatureTitle" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-signature-point-one">
-                        Signature point 1
+                        Imza maddesi 1
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.signaturePointOne} id="home-signature-point-one" name="signaturePointOne" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-signature-point-two">
-                        Signature point 2
+                        Imza maddesi 2
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.signaturePointTwo} id="home-signature-point-two" name="signaturePointTwo" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-signature-point-three">
-                        Signature point 3
+                        Imza maddesi 3
                       </label>
                       <input
                         className={inputClassName}
@@ -365,37 +365,37 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-story-badge">
-                        Story badge
+                        Hikaye rozeti
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.storyBadge} id="home-story-badge" name="storyBadge" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="home-story-title">
-                        Story title
+                        Hikaye basligi
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.storyTitle} id="home-story-title" name="storyTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="home-story-description">
-                        Story description
+                        Hikaye aciklamasi
                       </label>
                       <textarea className={textareaClassName} defaultValue={homeContent.storyDescription} id="home-story-description" name="storyDescription" required />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-story-highlight-one">
-                        Story highlight 1
+                        Hikaye vurgusu 1
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.storyHighlightOne} id="home-story-highlight-one" name="storyHighlightOne" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-story-highlight-two">
-                        Story highlight 2
+                        Hikaye vurgusu 2
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.storyHighlightTwo} id="home-story-highlight-two" name="storyHighlightTwo" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-story-highlight-three">
-                        Story highlight 3
+                        Hikaye vurgusu 3
                       </label>
                       <input
                         className={inputClassName}
@@ -408,54 +408,54 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-visit-eyebrow">
-                        Visit eyebrow
+                        Ziyaret etiketi
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.visitEyebrow} id="home-visit-eyebrow" name="visitEyebrow" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="home-visit-title">
-                        Visit title
+                        Ziyaret basligi
                       </label>
                       <input className={inputClassName} defaultValue={homeContent.visitTitle} id="home-visit-title" name="visitTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="home-visit-description">
-                        Visit description
+                        Ziyaret aciklamasi
                       </label>
                       <textarea className={textareaClassName} defaultValue={homeContent.visitDescription} id="home-visit-description" name="visitDescription" required />
                     </div>
                     <div className="md:col-span-2">
-                      <Button type="submit">Save Homepage Content</Button>
+                      <Button type="submit">Ana Sayfa Icerigini Kaydet</Button>
                     </div>
                   </form>
                 </div>
               </details>
 
               <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45">
-                <summary className="cursor-pointer list-none px-4 py-3 font-medium">About Page Content</summary>
+                <summary className="cursor-pointer list-none px-4 py-3 font-medium">Hakkimizda Sayfasi Icerigi</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateAboutContentAction} className="grid gap-3 md:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-badge">
-                        Badge
+                        Rozet
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.badge} id="about-badge" name="badge" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="about-title">
-                        Title
+                        Baslik
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.title} id="about-title" name="title" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="about-intro">
-                        Intro
+                        Giris
                       </label>
                       <textarea className={textareaClassName} defaultValue={aboutContent.intro} id="about-intro" name="intro" required />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-philosophy-eyebrow">
-                        Philosophy eyebrow
+                        Felsefe etiketi
                       </label>
                       <input
                         className={inputClassName}
@@ -468,7 +468,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="about-philosophy-description">
-                        Philosophy description
+                        Felsefe aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -480,31 +480,31 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-values-eyebrow">
-                        Values eyebrow
+                        Degerler etiketi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.valuesEyebrow} id="about-values-eyebrow" name="valuesEyebrow" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-values-title">
-                        Values title
+                        Degerler basligi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.valuesTitle} id="about-values-title" name="valuesTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="about-values-description">
-                        Values description
+                        Degerler aciklamasi
                       </label>
                       <textarea className={textareaClassName} defaultValue={aboutContent.valuesDescription} id="about-values-description" name="valuesDescription" required />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-one-title">
-                        Value card 1 title
+                        Deger karti 1 basligi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.valueOneTitle} id="about-value-one-title" name="valueOneTitle" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-one-description">
-                        Value card 1 description
+                        Deger karti 1 aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -516,13 +516,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-two-title">
-                        Value card 2 title
+                        Deger karti 2 basligi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.valueTwoTitle} id="about-value-two-title" name="valueTwoTitle" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-two-description">
-                        Value card 2 description
+                        Deger karti 2 aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -534,13 +534,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-three-title">
-                        Value card 3 title
+                        Deger karti 3 basligi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.valueThreeTitle} id="about-value-three-title" name="valueThreeTitle" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-value-three-description">
-                        Value card 3 description
+                        Deger karti 3 aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -552,19 +552,19 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-journey-eyebrow">
-                        Journey eyebrow
+                        Yolculuk etiketi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.journeyEyebrow} id="about-journey-eyebrow" name="journeyEyebrow" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="about-journey-title">
-                        Journey title
+                        Yolculuk basligi
                       </label>
                       <input className={inputClassName} defaultValue={aboutContent.journeyTitle} id="about-journey-title" name="journeyTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="about-journey-description">
-                        Journey description
+                        Yolculuk aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -575,37 +575,37 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <Button type="submit">Save About Page Content</Button>
+                      <Button type="submit">Hakkimizda Icerigini Kaydet</Button>
                     </div>
                   </form>
                 </div>
               </details>
 
               <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45">
-                <summary className="cursor-pointer list-none px-4 py-3 font-medium">Contact Page Content</summary>
+                <summary className="cursor-pointer list-none px-4 py-3 font-medium">Iletisim Sayfasi Icerigi</summary>
                 <div className="border-t border-border/70 px-4 py-4">
                   <form action={updateContactContentAction} className="grid gap-3 md:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-badge">
-                        Badge
+                        Rozet
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.badge} id="contact-badge" name="badge" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="contact-title">
-                        Title
+                        Baslik
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.title} id="contact-title" name="title" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="contact-description">
-                        Description
+                        Aciklama
                       </label>
                       <textarea className={textareaClassName} defaultValue={contactContent.description} id="contact-description" name="description" required />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-quick-message-title">
-                        Quick message title
+                        Hizli mesaj basligi
                       </label>
                       <input
                         className={inputClassName}
@@ -618,7 +618,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="contact-quick-message-description">
-                        Quick message description
+                        Hizli mesaj aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -630,19 +630,19 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-details-eyebrow">
-                        Details eyebrow
+                        Detay etiketi
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.detailsEyebrow} id="contact-details-eyebrow" name="detailsEyebrow" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-details-title">
-                        Details title
+                        Detay basligi
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.detailsTitle} id="contact-details-title" name="detailsTitle" required type="text" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="contact-details-description">
-                        Details description
+                        Detay aciklamasi
                       </label>
                       <textarea
                         className={textareaClassName}
@@ -654,36 +654,36 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-phone">
-                        Phone
+                        Telefon
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.phone} id="contact-phone" name="phone" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-email">
-                        Email
+                        E-posta
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.email} id="contact-email" name="email" required type="email" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-2 block text-sm" htmlFor="contact-address">
-                        Address
+                        Adres
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.address} id="contact-address" name="address" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-hours">
-                        Hours
+                        Calisma saatleri
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.hours} id="contact-hours" name="hours" required type="text" />
                     </div>
                     <div>
                       <label className="mb-2 block text-sm" htmlFor="contact-map-url">
-                        Map URL
+                        Harita URL
                       </label>
                       <input className={inputClassName} defaultValue={contactContent.mapUrl} id="contact-map-url" name="mapUrl" required type="url" />
                     </div>
                     <div className="md:col-span-2">
-                      <Button type="submit">Save Contact Page Content</Button>
+                      <Button type="submit">Iletisim Icerigini Kaydet</Button>
                     </div>
                   </form>
                 </div>
@@ -693,13 +693,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
           {workspace === "articles" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-articles">
             <div className="mb-5">
-              <h2 className="font-heading text-2xl">Manage Articles</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Articles can be published on Home or About pages dynamically.</p>
+              <h2 className="font-heading text-2xl">Makaleleri Yonet</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Makaleler Ana Sayfa veya Hakkimizda sayfalarinda dinamik olarak yayinlanabilir.</p>
             </div>
             <div className="space-y-3">
               {siteArticles.length === 0 ? (
                 <p className="rounded-lg border border-border/70 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-                  No articles yet. Create one from the right panel.
+                  Henuz makale yok. Sagdaki panelden yeni bir tane olusturun.
                 </p>
               ) : null}
               {siteArticles.map((article, index) => {
@@ -713,7 +713,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Order {article.display_order}</span>
+                        <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Sira {article.display_order}</span>
                         <span
                           className={`rounded-full px-2 py-1 ${
                             article.is_published
@@ -721,7 +721,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                               : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
-                          {article.is_published ? "Published" : "Draft"}
+                          {article.is_published ? "Yayinda" : "Taslak"}
                         </span>
                       </div>
                     </summary>
@@ -730,7 +730,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <input name="articleId" type="hidden" value={article.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`article-title-${article.id}`}>
-                            Title
+                            Baslik
                           </label>
                           <input
                             className={inputClassName}
@@ -743,28 +743,28 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`article-page-${article.id}`}>
-                            Page
+                            Sayfa
                           </label>
                           <select className={inputClassName} defaultValue={article.page} id={`article-page-${article.id}`} name="page" required>
-                            <option value="home">Home</option>
-                            <option value="about">About</option>
+                            <option value="home">Ana Sayfa</option>
+                            <option value="about">Hakkimizda</option>
                           </select>
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`article-author-${article.id}`}>
-                            Author
+                            Yazar
                           </label>
                           <input className={inputClassName} defaultValue={article.author} id={`article-author-${article.id}`} name="author" type="text" />
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`article-order-${article.id}`}>
-                            Display order
+                            Gosterim sirasi
                           </label>
                           <input className={inputClassName} defaultValue={article.display_order} id={`article-order-${article.id}`} name="displayOrder" required type="number" />
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`article-excerpt-${article.id}`}>
-                            Excerpt
+                            Ozet
                           </label>
                           <textarea
                             className={textareaClassName}
@@ -775,7 +775,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`article-content-${article.id}`}>
-                            Content
+                            Icerik
                           </label>
                           <textarea
                             className="min-h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -787,24 +787,24 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`article-image-${article.id}`}>
-                            Image URL
+                            Gorsel URL
                           </label>
                           <input className={inputClassName} defaultValue={article.image_url ?? ""} id={`article-image-${article.id}`} name="imageUrl" type="url" />
                         </div>
                         <label className="inline-flex items-center gap-2 text-sm">
                           <input className={checkboxClassName} defaultChecked={article.is_published} name="isPublished" type="checkbox" />
-                          Published
+                          Yayinda
                         </label>
                         <div className="md:col-span-2 flex flex-wrap gap-2">
-                          <Button type="submit">Save Article</Button>
+                          <Button type="submit">Makaleyi Kaydet</Button>
                         </div>
                       </form>
 
                       <form action={deleteSiteArticleAction} className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
                         <input name="articleId" type="hidden" value={article.id} />
-                        <input className={inputClassName} name="confirmation" placeholder='Type "DELETE"' required type="text" />
+                        <input className={inputClassName} name="confirmation" placeholder='Silmek icin "DELETE" yazin' required type="text" />
                         <Button type="submit" variant="destructive">
-                          Delete Article
+                          Makaleyi Sil
                         </Button>
                       </form>
                     </div>
@@ -816,13 +816,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
           {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-categories">
             <div className="mb-5">
-              <h2 className="font-heading text-2xl">Manage Categories</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Edit visibility, order, and details without leaving this page.</p>
+              <h2 className="font-heading text-2xl">Kategorileri Yonet</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Sayfadan ayrilmadan gorunurluk, sira ve detaylari duzenleyin.</p>
             </div>
             <div className="space-y-3">
               {categories.length === 0 ? (
                 <p className="rounded-lg border border-border/70 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-                  No categories yet. Use Create Category on the right panel.
+                  Henuz kategori yok. Sagdaki panelden kategori olusturun.
                 </p>
               ) : null}
               {categories.map((category, index) => {
@@ -831,10 +831,10 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
                       <div>
                         <p className="font-medium text-foreground">{category.name}</p>
-                        <p className="text-xs text-muted-foreground">{category.description || "No description"}</p>
+                        <p className="text-xs text-muted-foreground">{category.description || "Aciklama yok"}</p>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Order {category.display_order}</span>
+                        <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Sira {category.display_order}</span>
                         <span
                           className={`rounded-full px-2 py-1 ${
                             category.is_active
@@ -842,7 +842,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                               : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
-                          {category.is_active ? "Visible" : "Hidden"}
+                          {category.is_active ? "Gorunur" : "Gizli"}
                         </span>
                       </div>
                     </summary>
@@ -851,7 +851,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <input name="categoryId" type="hidden" value={category.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`category-name-${category.id}`}>
-                            Name
+                            Ad
                           </label>
                           <input
                             className={inputClassName}
@@ -864,13 +864,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`category-order-${category.id}`}>
-                            Display order
+                            Gosterim sirasi
                           </label>
                           <input className={inputClassName} defaultValue={category.display_order} id={`category-order-${category.id}`} name="displayOrder" required type="number" />
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`category-icon-${category.id}`}>
-                            Icon key
+                            Ikon anahtari
                           </label>
                           <input
                             className={inputClassName}
@@ -881,11 +881,11 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                             placeholder="utensils-crossed"
                             type="text"
                           />
-                          <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
+                          <p className="mt-1 text-xs text-muted-foreground">Varsayilan ikonu kullanmak icin bos birakin.</p>
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`category-image-${category.id}`}>
-                            Circle image URL
+                            Dairesel gorsel URL
                           </label>
                           <input
                             className={inputClassName}
@@ -895,11 +895,11 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                             placeholder="https://images.example.com/category.jpg"
                             type="url"
                           />
-                          <p className="mt-1 text-xs text-muted-foreground">Used on top menu circles. Leave empty to use automatic fallback imagery.</p>
+                          <p className="mt-1 text-xs text-muted-foreground">Ust menu dairelerinde kullanilir. Otomatik gorsel icin bos birakin.</p>
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`category-description-${category.id}`}>
-                            Description
+                            Aciklama
                           </label>
                           <textarea
                             className={textareaClassName}
@@ -910,17 +910,17 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <label className="inline-flex items-center gap-2 text-sm">
                           <input className={checkboxClassName} defaultChecked={category.is_active} name="isActive" type="checkbox" />
-                          Category visible
+                          Kategori gorunur
                         </label>
                         <div className="md:col-span-2 flex flex-wrap gap-2">
-                          <Button type="submit">Save Category</Button>
+                          <Button type="submit">Kategoriyi Kaydet</Button>
                         </div>
                       </form>
                       <form action={deleteCategoryAction} className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
                         <input name="categoryId" type="hidden" value={category.id} />
-                        <input className={inputClassName} name="confirmation" placeholder='Type "DELETE"' required type="text" />
+                        <input className={inputClassName} name="confirmation" placeholder='Silmek icin "DELETE" yazin' required type="text" />
                         <Button type="submit" variant="destructive">
-                          Delete Category
+                          Kategoriyi Sil
                         </Button>
                       </form>
                     </div>
@@ -932,18 +932,18 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
           {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-products">
             <div className="mb-5">
-              <h2 className="font-heading text-2xl">Manage Products</h2>
-              <p className="mt-1 text-sm text-muted-foreground">All product settings are grouped per item for faster edits.</p>
+              <h2 className="font-heading text-2xl">Urunleri Yonet</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Hizli duzenleme icin tum urun ayarlari urun bazinda gruplanmistir.</p>
             </div>
             <div className="space-y-3">
               {menuItems.length === 0 ? (
                 <p className="rounded-lg border border-border/70 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-                  No products yet. Use Create Product on the right panel.
+                  Henuz urun yok. Sagdaki panelden urun olusturun.
                 </p>
               ) : null}
               {menuItems.map((item, index) => {
                 const itemTags = tagsByItem[item.id] ?? []
-                const categoryName = categoryNameById[item.category_id] ?? "Unknown category"
+                const categoryName = categoryNameById[item.category_id] ?? "Bilinmeyen kategori"
 
                 return (
                   <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={item.id} open={index === 0}>
@@ -951,7 +951,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                       <div>
                         <p className="font-medium text-foreground">{item.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {categoryName} • ${item.price.toFixed(2)}
+                          {categoryName} • ₺{item.price.toFixed(2)}
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
@@ -962,10 +962,10 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                               : "border border-warning/30 bg-warning/10 text-warning"
                           }`}
                         >
-                          {item.is_available ? "Available" : "Unavailable"}
+                          {item.is_available ? "Mevcut" : "Mevcut degil"}
                         </span>
                         <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-primary">
-                          {item.is_featured ? "Featured" : "Standard"}
+                          {item.is_featured ? "One cikan" : "Standart"}
                         </span>
                       </div>
                     </summary>
@@ -974,7 +974,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         <input name="itemId" type="hidden" value={item.id} />
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`item-name-${item.id}`}>
-                            Product name
+                            Urun adi
                           </label>
                           <input
                             className={inputClassName}
@@ -987,7 +987,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`item-category-${item.id}`}>
-                            Category
+                            Kategori
                           </label>
                           <select className={inputClassName} defaultValue={item.category_id} id={`item-category-${item.id}`} name="categoryId" required>
                             {categories.map((category) => {
@@ -1001,19 +1001,19 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`item-price-${item.id}`}>
-                            Price
+                            Fiyat
                           </label>
                           <input className={inputClassName} defaultValue={item.price} id={`item-price-${item.id}`} name="price" required step="0.01" type="number" />
                         </div>
                         <div>
                           <label className="mb-2 block text-sm" htmlFor={`item-order-${item.id}`}>
-                            Display order
+                            Gosterim sirasi
                           </label>
                           <input className={inputClassName} defaultValue={item.display_order} id={`item-order-${item.id}`} name="displayOrder" required type="number" />
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`item-description-${item.id}`}>
-                            Description
+                            Aciklama
                           </label>
                           <textarea
                             className={textareaClassName}
@@ -1024,34 +1024,34 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`item-image-${item.id}`}>
-                            Image URL
+                            Gorsel URL
                           </label>
                           <input className={inputClassName} defaultValue={item.image_url ?? ""} id={`item-image-${item.id}`} name="imageUrl" type="url" />
                         </div>
                         <div className="md:col-span-2">
                           <label className="mb-2 block text-sm" htmlFor={`item-tags-${item.id}`}>
-                            Tags (comma separated)
+                            Etiketler (virgulle ayirin)
                           </label>
                           <input className={inputClassName} defaultValue={itemTags.join(",")} id={`item-tags-${item.id}`} name="tags" type="text" />
                         </div>
                         <label className="inline-flex items-center gap-2 text-sm">
                           <input className={checkboxClassName} defaultChecked={item.is_available} name="isAvailable" type="checkbox" />
-                          Available
+                          Mevcut
                         </label>
                         <label className="inline-flex items-center gap-2 text-sm">
                           <input className={checkboxClassName} defaultChecked={item.is_featured} name="isFeatured" type="checkbox" />
-                          Featured
+                          One cikan
                         </label>
                         <div className="md:col-span-2 flex flex-wrap gap-2">
-                          <Button type="submit">Save Product</Button>
+                          <Button type="submit">Urunu Kaydet</Button>
                         </div>
                       </form>
 
                       <form action={deleteMenuItemAction} className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
                         <input name="itemId" type="hidden" value={item.id} />
-                        <input className={inputClassName} name="confirmation" placeholder='Type "DELETE"' required type="text" />
+                        <input className={inputClassName} name="confirmation" placeholder='Silmek icin "DELETE" yazin' required type="text" />
                         <Button type="submit" variant="destructive">
-                          Delete Product
+                          Urunu Sil
                         </Button>
                       </form>
                     </div>
@@ -1065,137 +1065,137 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
         <aside className="space-y-6 xl:sticky xl:top-6">
           {workspace === "overview" ? (
             <section className="rounded-xl border border-border/80 bg-card/70 p-6">
-              <h2 className="font-heading text-xl">Design Plan</h2>
-              <p className="mt-1 text-sm text-muted-foreground">The admin panel is now split into focused workspaces to improve speed, readability, and reduce editing mistakes.</p>
+              <h2 className="font-heading text-xl">Tasarim Plani</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Yonetim paneli hiz, okunabilirlik ve duzenleme guvenligi icin odakli calisma alanlarina bolundu.</p>
               <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                <p>1. <span className="text-foreground">Overview</span> for key metrics and quick access.</p>
-                <p>2. <span className="text-foreground">Content</span> for homepage/about/contact copy editing.</p>
-                <p>3. <span className="text-foreground">Articles</span> for listing and article create/update/delete.</p>
-                <p>4. <span className="text-foreground">Categories</span> for menu grouping and circle image/icon setup.</p>
-                <p>5. <span className="text-foreground">Products</span> for item availability, pricing, and metadata.</p>
+                <p>1. <span className="text-foreground">Genel Bakis</span> metrikler ve hizli erisim icin.</p>
+                <p>2. <span className="text-foreground">Icerik</span> ana sayfa/hakkimizda/iletisim metinleri icin.</p>
+                <p>3. <span className="text-foreground">Makaleler</span> listeleme ve olusturma/guncelleme/silme icin.</p>
+                <p>4. <span className="text-foreground">Kategoriler</span> menu gruplama ve dairesel gorsel/ikon ayari icin.</p>
+                <p>5. <span className="text-foreground">Urunler</span> stok durumu, fiyat ve etiketler icin.</p>
               </div>
             </section>
           ) : null}
 
           {workspace === "articles" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-article">
-            <h2 className="font-heading text-xl">Create Article</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Add a new article for Home or About pages.</p>
+            <h2 className="font-heading text-xl">Makale Olustur</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Ana Sayfa veya Hakkimizda icin yeni bir makale ekleyin.</p>
             <form action={createSiteArticleAction} className="mt-4 grid gap-3">
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-title">
-                  Title
+                  Baslik
                 </label>
                 <input className={inputClassName} id="create-article-title" name="title" required type="text" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-page">
-                  Page
+                  Sayfa
                 </label>
                 <select className={inputClassName} id="create-article-page" name="page" required>
-                  <option value="home">Home</option>
-                  <option value="about">About</option>
+                  <option value="home">Ana Sayfa</option>
+                  <option value="about">Hakkimizda</option>
                 </select>
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-author">
-                  Author
+                  Yazar
                 </label>
                 <input className={inputClassName} defaultValue="Balkon Café Team" id="create-article-author" name="author" type="text" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-order">
-                  Display order
+                  Gosterim sirasi
                 </label>
                 <input className={inputClassName} defaultValue={1} id="create-article-order" name="displayOrder" required type="number" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-excerpt">
-                  Excerpt
+                  Ozet
                 </label>
                 <textarea className={textareaClassName} id="create-article-excerpt" name="excerpt" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-content">
-                  Content
+                  Icerik
                 </label>
                 <textarea className="min-h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring" id="create-article-content" name="content" required />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-article-image">
-                  Image URL
+                  Gorsel URL
                 </label>
                 <input className={inputClassName} id="create-article-image" name="imageUrl" type="url" />
               </div>
               <label className="inline-flex items-center gap-2 text-sm">
                 <input className={checkboxClassName} defaultChecked name="isPublished" type="checkbox" />
-                Published
+                Yayinda
               </label>
-              <Button type="submit">Create Article</Button>
+              <Button type="submit">Makale Olustur</Button>
             </form>
           </section> : null}
 
           {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-category">
-            <h2 className="font-heading text-xl">Create Category</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Add a new menu group with ordering and visibility.</p>
+            <h2 className="font-heading text-xl">Kategori Olustur</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Siralama ve gorunurluk ayarlariyla yeni bir menu grubu ekleyin.</p>
             <form action={createCategoryAction} className="mt-4 grid gap-3">
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-name">
-                  Name
+                  Ad
                 </label>
                 <input className={inputClassName} id="create-category-name" name="name" required type="text" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-order">
-                  Display order
+                  Gosterim sirasi
                 </label>
                 <input className={inputClassName} defaultValue={1} id="create-category-order" name="displayOrder" required type="number" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-icon">
-                  Icon key
+                  Ikon anahtari
                 </label>
                 <input className={inputClassName} id="create-category-icon" list="category-icon-options" name="iconName" placeholder="utensils-crossed" type="text" />
-                <p className="mt-1 text-xs text-muted-foreground">Leave empty to use the default icon.</p>
+                <p className="mt-1 text-xs text-muted-foreground">Varsayilan ikonu kullanmak icin bos birakin.</p>
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-image">
-                  Circle image URL
+                  Dairesel gorsel URL
                 </label>
                 <input className={inputClassName} id="create-category-image" name="imageUrl" placeholder="https://images.example.com/category.jpg" type="url" />
-                <p className="mt-1 text-xs text-muted-foreground">Used on top menu circles. Leave empty to use automatic fallback imagery.</p>
+                <p className="mt-1 text-xs text-muted-foreground">Ust menu dairelerinde kullanilir. Otomatik gorsel icin bos birakin.</p>
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-category-description">
-                  Description
+                  Aciklama
                 </label>
                 <textarea className={textareaClassName} id="create-category-description" name="description" />
               </div>
               <label className="inline-flex items-center gap-2 text-sm">
                 <input className={checkboxClassName} defaultChecked name="isActive" type="checkbox" />
-                Category visible
+                Kategori gorunur
               </label>
-              <Button type="submit">Create Category</Button>
+              <Button type="submit">Kategori Olustur</Button>
             </form>
           </section> : null}
 
           {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-product">
-            <h2 className="font-heading text-xl">Create Product</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Add a new menu item with pricing, tags, and availability.</p>
+            <h2 className="font-heading text-xl">Urun Olustur</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Fiyat, etiket ve stok bilgileriyle yeni bir menu urunu ekleyin.</p>
             {!hasCategories ? (
               <p className="mt-3 rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                Create at least one category before adding products.
+                Urun eklemeden once en az bir kategori olusturun.
               </p>
             ) : null}
             <form action={createMenuItemAction} className="mt-4 grid gap-3">
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-name">
-                  Product name
+                  Urun adi
                 </label>
                 <input className={inputClassName} id="create-product-name" name="name" required type="text" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-category">
-                  Category
+                  Kategori
                 </label>
                 <select className={inputClassName} disabled={!hasCategories} id="create-product-category" name="categoryId" required>
                   {categories.map((category) => {
@@ -1209,44 +1209,44 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-price">
-                  Price
+                  Fiyat
                 </label>
                 <input className={inputClassName} id="create-product-price" name="price" required step="0.01" type="number" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-order">
-                  Display order
+                  Gosterim sirasi
                 </label>
                 <input className={inputClassName} defaultValue={1} id="create-product-order" name="displayOrder" required type="number" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-description">
-                  Description
+                  Aciklama
                 </label>
                 <textarea className={textareaClassName} id="create-product-description" name="description" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-image">
-                  Image URL
+                  Gorsel URL
                 </label>
                 <input className={inputClassName} id="create-product-image" name="imageUrl" placeholder="https://cdn..." type="url" />
               </div>
               <div>
                 <label className="mb-2 block text-sm" htmlFor="create-product-tags">
-                  Tags (comma separated)
+                  Etiketler (virgulle ayirin)
                 </label>
                 <input className={inputClassName} id="create-product-tags" name="tags" placeholder="bestseller,vegetarian" type="text" />
               </div>
               <label className="inline-flex items-center gap-2 text-sm">
                 <input className={checkboxClassName} defaultChecked name="isAvailable" type="checkbox" />
-                Available
+                Mevcut
               </label>
               <label className="inline-flex items-center gap-2 text-sm">
                 <input className={checkboxClassName} name="isFeatured" type="checkbox" />
-                Featured
+                One cikan
               </label>
               <Button disabled={!hasCategories} type="submit">
-                Create Product
+                Urun Olustur
               </Button>
             </form>
           </section> : null}

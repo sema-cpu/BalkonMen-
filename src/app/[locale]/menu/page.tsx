@@ -95,15 +95,15 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
               <QrCode aria-hidden className="size-4 text-primary" />
             </div>
             <div>
-              <p className="font-heading text-lg">{t("Balkon Cafe Menu", "Balkon Café Menu")}</p>
-              <p className="text-xs text-muted-foreground">{t("QR odakli deneyim", "QR-first experience")}</p>
+              <p className="font-heading text-lg">{t("Balkon Cafe Menusu", "Balkon Cafe Menusu")}</p>
+              <p className="text-xs text-muted-foreground">{t("QR odakli deneyim", "QR odakli deneyim")}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Button asChild size="default" variant="secondary">
-              <Link aria-label={t("Tanitim sitesine git", "Navigate to promotional website")} href={toLocalizedPath(locale, "/")}>
+              <Link aria-label={t("Tanitim sitesine git", "Tanitim sitesine git")} href={toLocalizedPath(locale, "/")}>
                 <Globe aria-hidden className="size-4" />
-                {t("Siteye Don", "Visit Website")}
+                {t("Siteye Don", "Siteye Don")}
               </Link>
             </Button>
           </div>
@@ -111,62 +111,62 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
       </header>
 
       <section className="mb-8 rounded-2xl border border-border/80 bg-card/75 p-5 shadow-lg shadow-primary/5">
-        <h1 className="font-heading text-2xl">{t("Tara, sec, keyfini cikar", "Scan, choose, enjoy")}</h1>
+        <h1 className="font-heading text-2xl">{t("Tara, sec, keyfini cikar", "Tara, sec, keyfini cikar")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {t(
             "Kategorilerden birini secerek yalnizca o bolumu goruntuleyebilir veya tum menuyu tek bir akista inceleyebilirsiniz.",
-            "Choose a category to focus on one section, or keep the full menu visible in one continuous flow."
+            "Kategorilerden birini secerek yalnizca o bolumu goruntuleyebilir veya tum menuyu tek bir akista inceleyebilirsiniz."
           )}
         </p>
         {source === "local" ? (
           <p className="mt-2 text-xs text-primary/90">
             {t(
               "Yerel demo menu verisi kullaniliyor. Canli veriye gecmek icin Supabase ortam degiskenlerini baglayin.",
-              "Using local demo menu data. Connect Supabase env values to switch to live data."
+              "Yerel demo menu verisi kullaniliyor. Canli veriye gecmek icin Supabase ortam degiskenlerini baglayin."
             )}
           </p>
         ) : null}
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <div aria-label={t("Menu gorunumu secici", "Menu view switcher")} className="inline-flex rounded-full border border-border/80 bg-background/80 p-1">
+          <div aria-label={t("Menu gorunumu secici", "Menu gorunumu secici")} className="inline-flex rounded-full border border-border/80 bg-background/80 p-1">
             <Link
-              aria-label={t("Liste gorunumu", "List view")}
+              aria-label={t("Liste gorunumu", "Liste gorunumu")}
               className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors ${
                 viewMode === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"
               }`}
               href={buildMenuHref(locale, "list", selectedCategoryId)}
             >
               <LayoutList aria-hidden className="size-3.5" />
-              {t("Liste", "List")}
+              {t("Liste", "Liste")}
             </Link>
             <Link
-              aria-label={t("Tablo gorunumu", "Table view")}
+              aria-label={t("Tablo gorunumu", "Tablo gorunumu")}
               className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors ${
                 viewMode === "table" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"
               }`}
               href={buildMenuHref(locale, "table", selectedCategoryId)}
             >
               <Table2 aria-hidden className="size-3.5" />
-              {t("Tablo", "Table")}
+              {t("Tablo", "Tablo")}
             </Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            {t("Toplam urun", "Total items")}: <span className="font-medium text-foreground">{displayedItems.length}</span>
+            {t("Toplam urun", "Toplam urun")}: <span className="font-medium text-foreground">{displayedItems.length}</span>
           </p>
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
           <Link
-            aria-label={t("Tum menuyu goster", "Show full menu")}
+            aria-label={t("Tum menuyu goster", "Tum menuyu goster")}
             className={`group flex flex-col items-center text-center ${selectedCategoryId === "all" ? "opacity-100" : "opacity-85 hover:opacity-100"}`}
             href={buildMenuHref(locale, viewMode, "all")}
           >
             <span className="relative inline-flex size-24 overflow-hidden rounded-full border border-border/80 ring-2 ring-background transition-transform group-hover:scale-[1.03] sm:size-28">
-              <Image alt={t("Tum menu", "All menu")} className="object-cover" fill sizes="112px" src={categoryCircleImageByKey.all} />
+              <Image alt={t("Tum menu", "Tum menu")} className="object-cover" fill sizes="112px" src={categoryCircleImageByKey.all} />
               <span className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
               <span className="absolute bottom-1 right-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-medium text-foreground shadow-sm">{items.length}</span>
             </span>
-            <span className="mt-2 line-clamp-1 text-sm font-semibold leading-tight text-foreground">{t("Tum Menu", "All Menu")}</span>
+            <span className="mt-2 line-clamp-1 text-sm font-semibold leading-tight text-foreground">{t("Tum Menu", "Tum Menu")}</span>
           </Link>
 
           {orderedCategories.map((category) => {
@@ -176,7 +176,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
 
             return (
               <Link
-                aria-label={t(`${category.name} kategorisini goster`, `Show ${category.name} category`)}
+                aria-label={t(`${category.name} kategorisini goster`, `${category.name} kategorisini goster`)}
                 className={`group flex flex-col items-center text-center ${isSelected ? "opacity-100" : "opacity-85 hover:opacity-100"}`}
                 href={buildMenuHref(locale, viewMode, category.id)}
                 key={category.id}
@@ -206,7 +206,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                 {selectedCategory.name}
               </>
             ) : (
-              <>{t("Tum Menu", "All Menu")}</>
+              <>{t("Tum Menu", "Tum Menu")}</>
             )}
           </div>
           <p className="text-sm text-muted-foreground">
@@ -232,11 +232,11 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                 <table className="w-full text-left text-sm">
                   <thead className="border-b border-border/80 bg-secondary/50 text-muted-foreground">
                     <tr>
-                      <th className="px-4 py-3 font-medium">{t("Kategori", "Category")}</th>
-                      <th className="px-4 py-3 font-medium">{t("Urun", "Item")}</th>
-                      <th className="px-4 py-3 font-medium">{t("Aciklama", "Description")}</th>
-                      <th className="px-4 py-3 font-medium">{t("Etiketler", "Tags")}</th>
-                      <th className="px-4 py-3 text-right font-medium">{t("Fiyat", "Price")}</th>
+                      <th className="px-4 py-3 font-medium">{t("Kategori", "Kategori")}</th>
+                      <th className="px-4 py-3 font-medium">{t("Urun", "Urun")}</th>
+                      <th className="px-4 py-3 font-medium">{t("Aciklama", "Aciklama")}</th>
+                      <th className="px-4 py-3 font-medium">{t("Etiketler", "Etiketler")}</th>
+                      <th className="px-4 py-3 text-right font-medium">{t("Fiyat", "Fiyat")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -271,7 +271,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                         <p className="text-sm font-medium text-primary">₺{item.price.toFixed(2)}</p>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{item.description}</p>
-                      <p className="mt-2 text-[11px] uppercase tracking-wide text-muted-foreground">{item.tags.join(" • ") || t("Etiket yok", "No tags")}</p>
+                      <p className="mt-2 text-[11px] uppercase tracking-wide text-muted-foreground">{item.tags.join(" • ") || t("Etiket yok", "Etiket yok")}</p>
                     </article>
                   )
                 })}
@@ -280,7 +280,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
           )
         ) : (
           <p className="rounded-xl border border-border/70 bg-background/65 px-4 py-3 text-sm text-muted-foreground">
-            {t("Bu secimde gosterilecek urun yok.", "There are no visible items for this selection right now.")}
+            {t("Bu secimde gosterilecek urun yok.", "Bu secimde gosterilecek urun yok.")}
           </p>
         )}
       </section>

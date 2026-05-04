@@ -13,8 +13,8 @@ import { toLocalizedPath } from "@/i18n/routing"
 import { getSiteContentData } from "@/lib/site-content-data"
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Contact Balkon Café for reservations, feedback, collaborations, or event requests."
+  title: "Iletisim",
+  description: "Rezervasyon, geri bildirim, is birligi veya etkinlik talepleri icin Balkon Café ile iletisime gecin."
 }
 
 type LocalizedContactPageProps = {
@@ -34,25 +34,25 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
   const contactCards = [
     {
       icon: <Phone aria-hidden className="size-5" />,
-      title: t("Telefon", "Phone"),
+      title: t("Telefon", "Telefon"),
       value: contactContent.phone,
       href: `tel:${contactContent.phone.replace(/\s+/g, "")}`
     },
     {
       icon: <Mail aria-hidden className="size-5" />,
-      title: t("E-posta", "Email"),
+      title: t("E-posta", "E-posta"),
       value: contactContent.email,
       href: `mailto:${contactContent.email}`
     },
     {
       icon: <MapPin aria-hidden className="size-5" />,
-      title: t("Konum", "Location"),
+      title: t("Konum", "Konum"),
       value: contactContent.address,
       href: contactContent.mapUrl
     },
     {
       icon: <Clock3 aria-hidden className="size-5" />,
-      title: t("Calisma Saatleri", "Hours"),
+      title: t("Calisma Saatleri", "Calisma Saatleri"),
       value: contactContent.hours,
       href: toLocalizedPath(locale, "/")
     }
@@ -71,13 +71,13 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
               <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">{contactContent.description}</p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
-                  <a aria-label={t("Balkon Cafe'yi ara", "Call Balkon Café")} href={`tel:${contactContent.phone.replace(/\s+/g, "")}`}>
-                    {t("Hemen Ara", "Call Now")}
+                  <a aria-label={t("Balkon Cafe'yi ara", "Balkon Cafe'yi ara")} href={`tel:${contactContent.phone.replace(/\s+/g, "")}`}>
+                    {t("Hemen Ara", "Hemen Ara")}
                   </a>
                 </Button>
                 <Button asChild variant="secondary">
-                  <a aria-label={t("Balkon Cafe'ye e-posta gonder", "Email Balkon Café")} href={`mailto:${contactContent.email}`}>
-                    {t("E-posta Gonder", "Send Email")}
+                  <a aria-label={t("Balkon Cafe'ye e-posta gonder", "Balkon Cafe'ye e-posta gonder")} href={`mailto:${contactContent.email}`}>
+                    {t("E-posta Gonder", "E-posta Gonder")}
                   </a>
                 </Button>
               </div>
@@ -89,7 +89,7 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
               <form action={`mailto:${contactContent.email}`} className="mt-4 grid gap-3" encType="text/plain" method="post">
                 <div>
                   <label className="mb-2 block text-sm" htmlFor="contact-name">
-                    {t("Ad Soyad", "Full name")}
+                    {t("Ad Soyad", "Ad Soyad")}
                   </label>
                   <input
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -101,7 +101,7 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm" htmlFor="contact-email">
-                    {t("E-posta", "Email")}
+                    {t("E-posta", "E-posta")}
                   </label>
                   <input
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -113,7 +113,7 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm" htmlFor="contact-message">
-                    {t("Mesaj", "Message")}
+                    {t("Mesaj", "Mesaj")}
                   </label>
                   <textarea
                     className="min-h-28 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -123,7 +123,7 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
                   />
                 </div>
                 <Button type="submit">
-                  {t("Mesaji Gonder", "Send Message")} <Send aria-hidden className="size-4" />
+                  {t("Mesaji Gonder", "Mesaji Gonder")} <Send aria-hidden className="size-4" />
                 </Button>
               </form>
             </div>
@@ -136,7 +136,7 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
           <HeadingBlock description={contactContent.detailsDescription} eyebrow={contactContent.detailsEyebrow} title={contactContent.detailsTitle} />
           {siteContentData.source === "local" ? (
             <p className="mb-5 text-xs text-primary/90">
-              {t("Iletisim icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "Contact content is currently using local defaults. Connect Supabase env values for live editing.")}
+              {t("Iletisim icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "Iletisim icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.")}
             </p>
           ) : null}
           <div className="grid gap-4 sm:grid-cols-2">
@@ -147,8 +147,8 @@ const LocalizedContactPage = async ({ params }: LocalizedContactPageProps) => {
                   <h2 className="font-heading text-2xl">{item.title}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">{item.value}</p>
                   <Button asChild className="mt-4" variant="outline">
-                    <Link aria-label={t(`${item.title} ac`, `Open ${item.title}`)} href={item.href}>
-                      {t("Ac", "Open")}
+                    <Link aria-label={t(`${item.title} ac`, `${item.title} ac`)} href={item.href}>
+                      {t("Ac", "Ac")}
                     </Link>
                   </Button>
                 </article>

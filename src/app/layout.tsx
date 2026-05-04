@@ -16,14 +16,14 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://balkoncafe.example"),
   title: {
-    default: "Balkon Café | Artisan Coffee & Brunch",
+    default: "Balkon Café | Zanaat Kahve ve Brunch",
     template: "%s | Balkon Café"
   },
-  description: "Soft and elegant café experience with QR-first menu flow and premium in-store ambiance",
-  keywords: ["cafe", "coffee", "brunch", "qr menu", "soft ui", "istanbul cafe"],
+  description: "QR odakli menu akisi ve premium magaza ici atmosfer ile yumusak ve zarif kafe deneyimi",
+  keywords: ["kafe", "kahve", "brunch", "qr menu", "istanbul kafe"],
   openGraph: {
-    title: "Balkon Café | Artisan Coffee & Brunch",
-    description: "Discover artisan coffee, seasonal brunch, and a QR-first menu experience.",
+    title: "Balkon Café | Zanaat Kahve ve Brunch",
+    description: "Zanaat kahve, mevsimsel brunch ve QR odakli menu deneyimini kesfedin.",
     type: "website",
     url: "/",
     images: [
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Balkon Café | Artisan Coffee & Brunch",
-    description: "Discover artisan coffee, seasonal brunch, and a QR-first menu experience.",
+    title: "Balkon Café | Zanaat Kahve ve Brunch",
+    description: "Zanaat kahve, mevsimsel brunch ve QR odakli menu deneyimini kesfedin.",
     images: ["/og-image.svg"]
   },
   icons: {
@@ -58,7 +58,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           className="sr-only fixed left-3 top-3 z-50 rounded-md bg-background px-3 py-2 text-sm text-foreground focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-ring"
           href="#main-content"
         >
-          Skip to content
+          Icerige gec
         </a>
         {children}
       </body>

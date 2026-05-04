@@ -72,7 +72,7 @@ const parseContentPage = (value: FormDataEntryValue | null): ContentPage => {
   const parsed = String(value ?? "").trim() as ContentPage
 
   if (!allowedContentPages.includes(parsed)) {
-    throw new Error("Page must be either home or about")
+    throw new Error("Sayfa degeri home veya about olmalidir")
   }
 
   return parsed
@@ -166,7 +166,7 @@ const initializeAdminAccessAction = async () => {
   }
 
   if ((count ?? 0) > 0) {
-    throw new Error("Admin has already been initialized. Ask an existing admin to grant access.")
+    throw new Error("Yonetici zaten baslatildi. Mevcut bir yoneticiden erisim isteyin.")
   }
 
   const { error: insertError } = await supabaseAdmin.from("admin_profiles").insert({
@@ -185,22 +185,22 @@ const initializeAdminAccessAction = async () => {
 
 const updateHomeContentAction = async (formData: FormData) => {
   const homeContent = {
-    heroBadge: parseRequiredString(formData.get("heroBadge"), "Hero badge"),
-    heroTitle: parseRequiredString(formData.get("heroTitle"), "Hero title"),
-    heroDescription: parseRequiredString(formData.get("heroDescription"), "Hero description"),
-    signatureTitle: parseRequiredString(formData.get("signatureTitle"), "Signature title"),
-    signaturePointOne: parseRequiredString(formData.get("signaturePointOne"), "Signature point one"),
-    signaturePointTwo: parseRequiredString(formData.get("signaturePointTwo"), "Signature point two"),
-    signaturePointThree: parseRequiredString(formData.get("signaturePointThree"), "Signature point three"),
-    storyBadge: parseRequiredString(formData.get("storyBadge"), "Story badge"),
-    storyTitle: parseRequiredString(formData.get("storyTitle"), "Story title"),
-    storyDescription: parseRequiredString(formData.get("storyDescription"), "Story description"),
-    storyHighlightOne: parseRequiredString(formData.get("storyHighlightOne"), "Story highlight one"),
-    storyHighlightTwo: parseRequiredString(formData.get("storyHighlightTwo"), "Story highlight two"),
-    storyHighlightThree: parseRequiredString(formData.get("storyHighlightThree"), "Story highlight three"),
-    visitEyebrow: parseRequiredString(formData.get("visitEyebrow"), "Visit eyebrow"),
-    visitTitle: parseRequiredString(formData.get("visitTitle"), "Visit title"),
-    visitDescription: parseRequiredString(formData.get("visitDescription"), "Visit description")
+    heroBadge: parseRequiredString(formData.get("heroBadge"), "Hero rozeti"),
+    heroTitle: parseRequiredString(formData.get("heroTitle"), "Hero basligi"),
+    heroDescription: parseRequiredString(formData.get("heroDescription"), "Hero aciklamasi"),
+    signatureTitle: parseRequiredString(formData.get("signatureTitle"), "Imza basligi"),
+    signaturePointOne: parseRequiredString(formData.get("signaturePointOne"), "Imza maddesi bir"),
+    signaturePointTwo: parseRequiredString(formData.get("signaturePointTwo"), "Imza maddesi iki"),
+    signaturePointThree: parseRequiredString(formData.get("signaturePointThree"), "Imza maddesi uc"),
+    storyBadge: parseRequiredString(formData.get("storyBadge"), "Hikaye rozeti"),
+    storyTitle: parseRequiredString(formData.get("storyTitle"), "Hikaye basligi"),
+    storyDescription: parseRequiredString(formData.get("storyDescription"), "Hikaye aciklamasi"),
+    storyHighlightOne: parseRequiredString(formData.get("storyHighlightOne"), "Hikaye vurgusu bir"),
+    storyHighlightTwo: parseRequiredString(formData.get("storyHighlightTwo"), "Hikaye vurgusu iki"),
+    storyHighlightThree: parseRequiredString(formData.get("storyHighlightThree"), "Hikaye vurgusu uc"),
+    visitEyebrow: parseRequiredString(formData.get("visitEyebrow"), "Ziyaret etiketi"),
+    visitTitle: parseRequiredString(formData.get("visitTitle"), "Ziyaret basligi"),
+    visitDescription: parseRequiredString(formData.get("visitDescription"), "Ziyaret aciklamasi")
   }
 
   await upsertSiteContentEntry("home", homeContent)
@@ -210,23 +210,23 @@ const updateHomeContentAction = async (formData: FormData) => {
 
 const updateAboutContentAction = async (formData: FormData) => {
   const aboutContent = {
-    badge: parseRequiredString(formData.get("badge"), "About badge"),
-    title: parseRequiredString(formData.get("title"), "About title"),
-    intro: parseRequiredString(formData.get("intro"), "About intro"),
-    philosophyEyebrow: parseRequiredString(formData.get("philosophyEyebrow"), "Philosophy eyebrow"),
-    philosophyDescription: parseRequiredString(formData.get("philosophyDescription"), "Philosophy description"),
-    valuesEyebrow: parseRequiredString(formData.get("valuesEyebrow"), "Values eyebrow"),
-    valuesTitle: parseRequiredString(formData.get("valuesTitle"), "Values title"),
-    valuesDescription: parseRequiredString(formData.get("valuesDescription"), "Values description"),
-    valueOneTitle: parseRequiredString(formData.get("valueOneTitle"), "Value one title"),
-    valueOneDescription: parseRequiredString(formData.get("valueOneDescription"), "Value one description"),
-    valueTwoTitle: parseRequiredString(formData.get("valueTwoTitle"), "Value two title"),
-    valueTwoDescription: parseRequiredString(formData.get("valueTwoDescription"), "Value two description"),
-    valueThreeTitle: parseRequiredString(formData.get("valueThreeTitle"), "Value three title"),
-    valueThreeDescription: parseRequiredString(formData.get("valueThreeDescription"), "Value three description"),
-    journeyEyebrow: parseRequiredString(formData.get("journeyEyebrow"), "Journey eyebrow"),
-    journeyTitle: parseRequiredString(formData.get("journeyTitle"), "Journey title"),
-    journeyDescription: parseRequiredString(formData.get("journeyDescription"), "Journey description")
+    badge: parseRequiredString(formData.get("badge"), "Hakkimizda rozeti"),
+    title: parseRequiredString(formData.get("title"), "Hakkimizda basligi"),
+    intro: parseRequiredString(formData.get("intro"), "Hakkimizda giris metni"),
+    philosophyEyebrow: parseRequiredString(formData.get("philosophyEyebrow"), "Felsefe etiketi"),
+    philosophyDescription: parseRequiredString(formData.get("philosophyDescription"), "Felsefe aciklamasi"),
+    valuesEyebrow: parseRequiredString(formData.get("valuesEyebrow"), "Degerler etiketi"),
+    valuesTitle: parseRequiredString(formData.get("valuesTitle"), "Degerler basligi"),
+    valuesDescription: parseRequiredString(formData.get("valuesDescription"), "Degerler aciklamasi"),
+    valueOneTitle: parseRequiredString(formData.get("valueOneTitle"), "Birinci deger basligi"),
+    valueOneDescription: parseRequiredString(formData.get("valueOneDescription"), "Birinci deger aciklamasi"),
+    valueTwoTitle: parseRequiredString(formData.get("valueTwoTitle"), "Ikinci deger basligi"),
+    valueTwoDescription: parseRequiredString(formData.get("valueTwoDescription"), "Ikinci deger aciklamasi"),
+    valueThreeTitle: parseRequiredString(formData.get("valueThreeTitle"), "Ucuncu deger basligi"),
+    valueThreeDescription: parseRequiredString(formData.get("valueThreeDescription"), "Ucuncu deger aciklamasi"),
+    journeyEyebrow: parseRequiredString(formData.get("journeyEyebrow"), "Yolculuk etiketi"),
+    journeyTitle: parseRequiredString(formData.get("journeyTitle"), "Yolculuk basligi"),
+    journeyDescription: parseRequiredString(formData.get("journeyDescription"), "Yolculuk aciklamasi")
   }
 
   await upsertSiteContentEntry("about", aboutContent)
@@ -236,19 +236,19 @@ const updateAboutContentAction = async (formData: FormData) => {
 
 const updateContactContentAction = async (formData: FormData) => {
   const contactContent = {
-    badge: parseRequiredString(formData.get("badge"), "Contact badge"),
-    title: parseRequiredString(formData.get("title"), "Contact title"),
-    description: parseRequiredString(formData.get("description"), "Contact description"),
-    quickMessageTitle: parseRequiredString(formData.get("quickMessageTitle"), "Quick message title"),
-    quickMessageDescription: parseRequiredString(formData.get("quickMessageDescription"), "Quick message description"),
-    detailsEyebrow: parseRequiredString(formData.get("detailsEyebrow"), "Details eyebrow"),
-    detailsTitle: parseRequiredString(formData.get("detailsTitle"), "Details title"),
-    detailsDescription: parseRequiredString(formData.get("detailsDescription"), "Details description"),
-    phone: parseRequiredString(formData.get("phone"), "Phone"),
-    email: parseRequiredString(formData.get("email"), "Email"),
-    address: parseRequiredString(formData.get("address"), "Address"),
-    hours: parseRequiredString(formData.get("hours"), "Hours"),
-    mapUrl: parseRequiredString(formData.get("mapUrl"), "Map URL")
+    badge: parseRequiredString(formData.get("badge"), "Iletisim rozeti"),
+    title: parseRequiredString(formData.get("title"), "Iletisim basligi"),
+    description: parseRequiredString(formData.get("description"), "Iletisim aciklamasi"),
+    quickMessageTitle: parseRequiredString(formData.get("quickMessageTitle"), "Hizli mesaj basligi"),
+    quickMessageDescription: parseRequiredString(formData.get("quickMessageDescription"), "Hizli mesaj aciklamasi"),
+    detailsEyebrow: parseRequiredString(formData.get("detailsEyebrow"), "Detay etiketi"),
+    detailsTitle: parseRequiredString(formData.get("detailsTitle"), "Detay basligi"),
+    detailsDescription: parseRequiredString(formData.get("detailsDescription"), "Detay aciklamasi"),
+    phone: parseRequiredString(formData.get("phone"), "Telefon"),
+    email: parseRequiredString(formData.get("email"), "E-posta"),
+    address: parseRequiredString(formData.get("address"), "Adres"),
+    hours: parseRequiredString(formData.get("hours"), "Calisma saatleri"),
+    mapUrl: parseRequiredString(formData.get("mapUrl"), "Harita URL")
   }
 
   await upsertSiteContentEntry("contact", contactContent)
@@ -265,7 +265,7 @@ const createSiteArticleAction = async (formData: FormData) => {
   const content = parseRequiredString(formData.get("content"), "Article content")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
   const author = parseString(formData.get("author")) || "Balkon Café Team"
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isPublished = parseBoolean(formData.get("isPublished"))
 
   const { error } = await supabaseAdmin.from("site_articles").insert({
@@ -297,7 +297,7 @@ const updateSiteArticleAction = async (formData: FormData) => {
   const content = parseRequiredString(formData.get("content"), "Article content")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
   const author = parseString(formData.get("author")) || "Balkon Café Team"
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isPublished = parseBoolean(formData.get("isPublished"))
 
   const { error } = await supabaseAdmin
@@ -326,7 +326,7 @@ const deleteSiteArticleAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
   const articleId = parseRequiredString(formData.get("articleId"), "Article id")
-  const confirmation = parseRequiredString(formData.get("confirmation"), "Delete confirmation")
+  const confirmation = parseRequiredString(formData.get("confirmation"), "Silme onayi")
 
   if (confirmation !== "DELETE") {
     throw new Error('Type "DELETE" to confirm article deletion')
@@ -345,11 +345,11 @@ const deleteSiteArticleAction = async (formData: FormData) => {
 const createCategoryAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
-  const name = parseRequiredString(formData.get("name"), "Category name")
+  const name = parseRequiredString(formData.get("name"), "Kategori adi")
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isActive = parseBoolean(formData.get("isActive"))
 
   const { error } = await supabaseAdmin.from("menu_categories").insert({
@@ -372,12 +372,12 @@ const createCategoryAction = async (formData: FormData) => {
 const updateCategoryAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
-  const categoryId = parseRequiredString(formData.get("categoryId"), "Category id")
-  const name = parseRequiredString(formData.get("name"), "Category name")
+  const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori kimligi")
+  const name = parseRequiredString(formData.get("name"), "Kategori adi")
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isActive = parseBoolean(formData.get("isActive"))
 
   const { error } = await supabaseAdmin
@@ -403,8 +403,8 @@ const updateCategoryAction = async (formData: FormData) => {
 const deleteCategoryAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
-  const categoryId = parseRequiredString(formData.get("categoryId"), "Category id")
-  const confirmation = parseRequiredString(formData.get("confirmation"), "Delete confirmation")
+  const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori kimligi")
+  const confirmation = parseRequiredString(formData.get("confirmation"), "Silme onayi")
 
   if (confirmation !== "DELETE") {
     throw new Error('Type "DELETE" to confirm category deletion')
@@ -423,12 +423,12 @@ const deleteCategoryAction = async (formData: FormData) => {
 const createMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
-  const categoryId = parseRequiredString(formData.get("categoryId"), "Category")
+  const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori")
   const name = parseRequiredString(formData.get("name"), "Product name")
   const description = parseString(formData.get("description"))
-  const price = parseNumber(formData.get("price"), "Price")
+  const price = parseNumber(formData.get("price"), "Fiyat")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isAvailable = parseBoolean(formData.get("isAvailable"))
   const isFeatured = parseBoolean(formData.get("isFeatured"))
   const tags = parseTags(formData.get("tags"))
@@ -475,12 +475,12 @@ const updateMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
   const itemId = parseRequiredString(formData.get("itemId"), "Item id")
-  const categoryId = parseRequiredString(formData.get("categoryId"), "Category")
+  const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori")
   const name = parseRequiredString(formData.get("name"), "Product name")
   const description = parseString(formData.get("description"))
-  const price = parseNumber(formData.get("price"), "Price")
+  const price = parseNumber(formData.get("price"), "Fiyat")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Display order")
+  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isAvailable = parseBoolean(formData.get("isAvailable"))
   const isFeatured = parseBoolean(formData.get("isFeatured"))
   const tags = parseTags(formData.get("tags"))
@@ -532,7 +532,7 @@ const deleteMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
   const itemId = parseRequiredString(formData.get("itemId"), "Item id")
-  const confirmation = parseRequiredString(formData.get("confirmation"), "Delete confirmation")
+  const confirmation = parseRequiredString(formData.get("confirmation"), "Silme onayi")
 
   if (confirmation !== "DELETE") {
     throw new Error('Type "DELETE" to confirm product deletion')

@@ -53,13 +53,13 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
               <p className="max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">{homeContent.heroDescription}</p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg">
-                  <Link aria-label={t("Menu sayfasini ac", "View menu page")} href={toLocalizedPath(locale, "/menu")}>
-                    {t("Menuyu Incele", "View Menu")} <ArrowRight aria-hidden className="size-4" />
+                  <Link aria-label={t("Menu sayfasini ac", "Menu sayfasini ac")} href={toLocalizedPath(locale, "/menu")}>
+                    {t("Menuyu Incele", "Menuyu Incele")} <ArrowRight aria-hidden className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="secondary">
-                  <Link aria-label={t("Ziyaret bolumune git", "Find location section")} href="#visit-us">
-                    {t("Bizi Bul", "Find Us")} <MapPin aria-hidden className="size-4" />
+                  <Link aria-label={t("Ziyaret bolumune git", "Ziyaret bolumune git")} href="#visit-us">
+                    {t("Bizi Bul", "Bizi Bul")} <MapPin aria-hidden className="size-4" />
                   </Link>
                 </Button>
               </div>
@@ -82,13 +82,13 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
       <Section id="signature">
         <Container>
           <HeadingBlock
-            description={t("Konfor klasiklerini ve mevsimsel sef dokunuslarini dengeleyen secki.", "A curated selection balancing comfort classics and chef-driven seasonal creativity.")}
-            eyebrow={t("Imza seckiler", "Signature offerings")}
-            title={t("Misafirlerin favorileri", "What guests love most")}
+            description={t("Konfor klasiklerini ve mevsimsel sef dokunuslarini dengeleyen secki.", "Konfor klasiklerini ve mevsimsel sef dokunuslarini dengeleyen secki.")}
+            eyebrow={t("Imza seckiler", "Imza seckiler")}
+            title={t("Misafirlerin favorileri", "Misafirlerin favorileri")}
           />
           {menuData.source === "local" ? (
             <p className="mb-5 text-xs text-primary/90">
-              {t("Menu su an yerel demo verisiyle calisiyor. Canli icerik icin Supabase ortam degiskenlerini baglayin.", "Menu is currently using local demo data. Connect Supabase env values for live content.")}
+              {t("Menu su an yerel demo verisiyle calisiyor. Canli icerik icin Supabase ortam degiskenlerini baglayin.", "Menu su an yerel demo verisiyle calisiyor. Canli icerik icin Supabase ortam degiskenlerini baglayin.")}
             </p>
           ) : null}
           {featuredItems.length > 0 ? (
@@ -99,7 +99,7 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
             </div>
           ) : (
             <div className="rounded-xl border border-border/70 bg-card/60 p-5 text-sm text-muted-foreground">
-              {t("En az bir urun one cikarilan olarak isaretlendiginde burada gosterilir.", "Featured products will appear here once at least one menu item is marked as featured.")}
+              {t("En az bir urun one cikarilan olarak isaretlendiginde burada gosterilir.", "En az bir urun one cikarilan olarak isaretlendiginde burada gosterilir.")}
             </div>
           )}
         </Container>
@@ -127,9 +127,9 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
       <Section id="gallery">
         <Container>
           <HeadingBlock
-            description={t("Bar, mutfak ve oturma deneyimimizden kareler", "Moments from our bar, kitchen, and seating experience")}
-            eyebrow={t("Galeri", "Gallery")}
-            title={t("Balkon Cafe icinden", "Inside Balkon Cafe")}
+            description={t("Bar, mutfak ve oturma deneyimimizden kareler", "Bar, mutfak ve oturma deneyimimizden kareler")}
+            eyebrow={t("Galeri", "Galeri")}
+            title={t("Balkon Cafe icinden", "Balkon Cafe icinden")}
           />
           <div className="grid gap-4 md:grid-cols-3">
             {gallery.map((image, index) => {
@@ -146,9 +146,9 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
       <Section id="reviews">
         <Container>
           <HeadingBlock
-            description={t("Duzenli misafirlerimizin yorumlariyla dogrulanan kalite ve atmosfer", "Consistent quality and atmosphere, praised by our regulars")}
-            eyebrow={t("Misafir yorumlari", "Guest highlights")}
-            title={t("Insanlar ne diyor", "What people say")}
+            description={t("Duzenli misafirlerimizin yorumlariyla dogrulanan kalite ve atmosfer", "Duzenli misafirlerimizin yorumlariyla dogrulanan kalite ve atmosfer")}
+            eyebrow={t("Misafir yorumlari", "Misafir yorumlari")}
+            title={t("Insanlar ne diyor", "Insanlar ne diyor")}
           />
           <div className="grid gap-4 md:grid-cols-2">
             {testimonials.map((item) => {
@@ -166,13 +166,13 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
       <Section id="articles">
         <Container>
           <HeadingBlock
-            description={t("Editoryal icerikler icerik yonetimi tarafindan dinamik olarak yonetilir.", "Editorial highlights are managed dynamically by the content team.")}
-            eyebrow={t("Makaleler", "Articles")}
-            title={t("Son hikayeler", "Latest stories")}
+            description={t("Editoryal icerikler icerik yonetimi tarafindan dinamik olarak yonetilir.", "Editoryal icerikler icerik yonetimi tarafindan dinamik olarak yonetilir.")}
+            eyebrow={t("Makaleler", "Makaleler")}
+            title={t("Son hikayeler", "Son hikayeler")}
           />
           {siteContentData.source === "local" ? (
             <p className="mb-5 text-xs text-primary/90">
-              {t("Site icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "Site content is currently using local defaults. Connect Supabase env values for live editing.")}
+              {t("Site icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.", "Site icerigi su an yerel varsayilanlarla calisiyor. Canli duzenleme icin Supabase ortam degiskenlerini baglayin.")}
             </p>
           ) : null}
           {homeArticles.length > 0 ? (
@@ -189,7 +189,7 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
             </div>
           ) : (
             <div className="rounded-xl border border-border/70 bg-card/60 p-5 text-sm text-muted-foreground">
-              {t("Yayimlanmis ana sayfa makaleleri eklendiginde burada gorunecek.", "Published homepage articles will appear here after they are added.")}
+              {t("Yayimlanmis ana sayfa makaleleri eklendiginde burada gorunecek.", "Yayimlanmis ana sayfa makaleleri eklendiginde burada gorunecek.")}
             </div>
           )}
         </Container>
@@ -205,8 +205,8 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild>
-                <Link aria-label={t("QR menu sayfasini ac", "Open QR menu page")} href={toLocalizedPath(locale, "/menu")}>
-                  {t("QR Menuyu Ac", "Open QR Menu")} <ArrowRight aria-hidden className="size-4" />
+                <Link aria-label={t("QR menu sayfasini ac", "QR menu sayfasini ac")} href={toLocalizedPath(locale, "/menu")}>
+                  {t("QR Menuyu Ac", "QR Menuyu Ac")} <ArrowRight aria-hidden className="size-4" />
                 </Link>
               </Button>
             </div>
