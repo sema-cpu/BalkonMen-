@@ -7,6 +7,7 @@ import { isLocale, type Locale } from "@/i18n/config"
 import { toLocalizedPath } from "@/i18n/routing"
 import { resolveMenuCategoryIcon } from "@/lib/menu-category-icons"
 import { getMenuData } from "@/lib/menu-data"
+import { MenuProductsAutoScroller, MenuScrollLink } from "./menu-scroll-link"
 
 const categoryCircleImageByKey: Record<string, string> = {
   coffee: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
@@ -83,11 +84,13 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
     }
 
     const queryText = query.toString()
-    return queryText ? `${pathname}?${queryText}` : pathname
+    const targetPath = queryText ? `${pathname}?${queryText}` : pathname
+    return `${targetPath}#menu-products`
   }
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-5xl px-4 pb-10 pt-5 sm:px-6" id="main-content" lang={locale}>
+      <MenuProductsAutoScroller />
       <header className="sticky top-3 z-20 mb-6 rounded-xl border border-border/80 bg-card/85 p-3 backdrop-blur">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -129,7 +132,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div aria-label={t("Menu gorunumu secici", "Menu gorunumu secici")} className="inline-flex rounded-full border border-border/80 bg-background/80 p-1">
-            <Link
+            <MenuScrollLink
               aria-label={t("Liste gorunumu", "Liste gorunumu")}
               className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors ${
                 viewMode === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"
@@ -138,8 +141,8 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
             >
               <LayoutList aria-hidden className="size-3.5" />
               {t("Liste", "Liste")}
-            </Link>
-            <Link
+            </MenuScrollLink>
+            <MenuScrollLink
               aria-label={t("Tablo gorunumu", "Tablo gorunumu")}
               className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors ${
                 viewMode === "table" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"
@@ -148,7 +151,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
             >
               <Table2 aria-hidden className="size-3.5" />
               {t("Tablo", "Tablo")}
-            </Link>
+            </MenuScrollLink>
           </div>
           <p className="text-xs text-muted-foreground">
             {t("Toplam urun", "Toplam urun")}: <span className="font-medium text-foreground">{displayedItems.length}</span>
@@ -156,7 +159,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
-          <Link
+          <MenuScrollLink
             aria-label={t("Tum menuyu goster", "Tum menuyu goster")}
             className={`group flex flex-col items-center text-center ${selectedCategoryId === "all" ? "opacity-100" : "opacity-85 hover:opacity-100"}`}
             href={buildMenuHref(locale, viewMode, "all")}
@@ -167,7 +170,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
               <span className="absolute bottom-1 right-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-medium text-foreground shadow-sm">{items.length}</span>
             </span>
             <span className="mt-2 line-clamp-1 text-sm font-semibold leading-tight text-foreground">{t("Tum Menu", "Tum Menu")}</span>
-          </Link>
+          </MenuScrollLink>
 
           {orderedCategories.map((category) => {
             const categoryItems = itemsByCategoryId[category.id] ?? []
@@ -175,7 +178,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
             const isSelected = selectedCategoryId === category.id
 
             return (
-              <Link
+              <MenuScrollLink
                 aria-label={t(`${category.name} kategorisini goster`, `${category.name} kategorisini goster`)}
                 className={`group flex flex-col items-center text-center ${isSelected ? "opacity-100" : "opacity-85 hover:opacity-100"}`}
                 href={buildMenuHref(locale, viewMode, category.id)}
@@ -189,13 +192,13 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
                   </span>
                 </span>
                 <span className="mt-2 line-clamp-1 text-sm font-semibold leading-tight text-foreground">{category.name}</span>
-              </Link>
+              </MenuScrollLink>
             )
           })}
         </div>
       </section>
 
-      <section className="space-y-5 rounded-3xl border border-border/70 bg-card/55 p-4 sm:p-6">
+      <section className="scroll-mt-28 space-y-5 rounded-3xl border border-border/70 bg-card/55 p-4 sm:p-6" id="menu-products" tabIndex={-1}>
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs uppercase tracking-wide text-primary">
             {selectedCategory ? (
