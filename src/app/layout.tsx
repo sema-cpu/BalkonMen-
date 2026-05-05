@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Caveat, Inter } from "next/font/google"
 import type { ReactNode } from "react"
 import "./globals.css"
 
@@ -8,9 +8,10 @@ const inter = Inter({
   variable: "--font-inter"
 })
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair"
+const caveat = Caveat({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-caveat",
+  weight: ["500", "600", "700"]
 })
 
 export const metadata: Metadata = {
@@ -42,7 +43,8 @@ export const metadata: Metadata = {
     images: ["/og-image.svg"]
   },
   icons: {
-    icon: "/icon.svg"
+    icon: "/images/logo-dark.png",
+    apple: "/images/logo-dark.png"
   }
 }
 
@@ -53,7 +55,7 @@ type RootLayoutProps = {
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="tr">
-      <body className={`${inter.variable} ${playfair.variable}`}>
+      <body className={`${inter.variable} ${caveat.variable}`}>
         <a
           className="sr-only fixed left-3 top-3 z-50 rounded-md bg-background px-3 py-2 text-sm text-foreground focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-ring"
           href="#main-content"

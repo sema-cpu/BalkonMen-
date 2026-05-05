@@ -34,7 +34,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)"
       },
       fontFamily: {
-        heading: ["var(--font-playfair)", "serif"],
+        heading: ["var(--font-caveat)", "cursive"],
         body: ["var(--font-inter)", "sans-serif"]
       }
     }

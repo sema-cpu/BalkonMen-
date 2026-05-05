@@ -1,5 +1,5 @@
+import Image from "next/image"
 import Link from "next/link"
-import { Coffee } from "lucide-react"
 import type { Locale } from "@/i18n/config"
 import { toLocalizedPath } from "@/i18n/routing"
 import { Container } from "@/components/primitives/container"
@@ -22,11 +22,10 @@ const SiteHeader = ({ locale, activePath = "/" }: SiteHeaderProps) => {
   return (
     <Container className="py-8">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border/80 pb-5">
-        <Link aria-label="Ana sayfaya git" className="flex items-center gap-3" href={toLocalizedPath(locale, "/")}>
-          <div className="rounded-full border border-primary/40 bg-primary/15 p-2">
-            <Coffee aria-hidden className="size-4 text-primary" />
+        <Link aria-label="Ana sayfaya git" className="inline-flex items-center" href={toLocalizedPath(locale, "/")}>
+          <div className="relative h-14 w-36 sm:h-16 sm:w-44">
+            <Image alt="Balkon Cafe Etiler logo" className="object-contain" fill priority sizes="(max-width: 640px) 144px, 176px" src="/images/logo-dark.png" />
           </div>
-          <p className="font-heading text-xl tracking-wide">Balkon Café</p>
         </Link>
         <nav className="flex flex-wrap items-center gap-2">
           {navItems.map((item) => {

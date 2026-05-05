@@ -1,5 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Coffee, MapPin } from "lucide-react"
+import { ArrowRight, MapPin } from "lucide-react"
 
 const RootPage = () => {
   return (
@@ -16,11 +17,10 @@ const RootPage = () => {
 
       <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col px-5 py-4 sm:px-8 sm:py-7">
         <header className="flex items-center justify-between gap-4">
-          <Link aria-label="Balkon Cafe ana giris" className="flex items-center gap-3" href="/">
-            <span className="grid size-10 place-items-center rounded-full border border-white/25 bg-white/10 backdrop-blur">
-              <Coffee aria-hidden className="size-5" />
+          <Link aria-label="Balkon Cafe ana giris" className="inline-flex items-center" href="/">
+            <span className="relative block h-16 w-40 sm:h-20 sm:w-52">
+              <Image alt="Balkon Cafe Etiler logo" className="object-contain" fill priority sizes="(max-width: 640px) 160px, 208px" src="/images/logo-white.png" />
             </span>
-            <span className="font-heading text-xl tracking-wide">Balkon Cafe</span>
           </Link>
           <nav aria-label="Hizli baglantilar" className="flex items-center gap-3 text-xs text-white/78 sm:gap-4 sm:text-sm">
             <Link className="transition hover:text-white" href="/tr/contact">
