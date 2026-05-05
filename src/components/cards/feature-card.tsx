@@ -21,7 +21,7 @@ const FeatureCard = ({ icon, title, description, className }: FeatureCardProps) 
       <h3 className="mb-2 font-heading text-xl text-foreground">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
       <div className="mt-4 flex items-center gap-1 text-xs text-primary/90">
-        <span>Explore</span>
+        <span>Keşfet</span>
         <ArrowUpRight aria-hidden className="size-3.5" />
       </div>
     </article>

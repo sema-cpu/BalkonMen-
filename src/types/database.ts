@@ -94,6 +94,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          doneness_rating: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order: number
           id: string
           icon_name: string
@@ -105,6 +106,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string
+          doneness_rating?: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order?: number
           id?: string
           icon_name?: string
@@ -116,6 +118,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
+          doneness_rating?: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order?: number
           id?: string
           icon_name?: string
@@ -154,6 +157,7 @@ export type Database = {
           category_id: string
           created_at: string
           description: string
+          doneness_rating: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order: number
           id: string
           image_url: string | null
@@ -167,6 +171,7 @@ export type Database = {
           category_id: string
           created_at?: string
           description?: string
+          doneness_rating?: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order?: number
           id?: string
           image_url?: string | null
@@ -180,6 +185,7 @@ export type Database = {
           category_id?: string
           created_at?: string
           description?: string
+          doneness_rating?: "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone" | null
           display_order?: number
           id?: string
           image_url?: string | null

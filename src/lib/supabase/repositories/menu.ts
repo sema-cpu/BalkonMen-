@@ -30,6 +30,7 @@ const mapItem = (row: MenuItemRow, tags: MenuTag[]): MenuItem => {
     price: row.price,
     image: row.image_url ?? undefined,
     tags,
+    donenessRating: row.doneness_rating ?? undefined,
     isFeatured: row.is_featured,
     isAvailable: row.is_available
   }
@@ -72,7 +73,7 @@ const getPublicMenuData = unstable_cache(
       })
     }
   },
-  ["public-menu-data-v2"],
+  ["public-menu-data-v3"],
   {
     revalidate: 180,
     tags: ["menu-data"]

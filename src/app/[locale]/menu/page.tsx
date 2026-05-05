@@ -214,7 +214,7 @@ const LocalizedMenuPage = async ({ params, searchParams }: LocalizedMenuPageProp
               ? selectedCategory.description
               : t(
                   "Varsayilan gorunumde tum urunler tek bir bolumde, asagidan yukariya tek liste olarak gosterilir.",
-                  "On first load, all menu items are shown in a single continuous section."
+                  "Varsayilan gorunumde tum urunler tek bir bolumde, asagidan yukariya tek liste olarak gosterilir."
                 )}
           </p>
         </div>

@@ -4,7 +4,7 @@ import { defaultLocale } from "@/i18n/config"
 import { updateSession } from "@/lib/supabase/middleware"
 
 const localizedPrefixes = ["/tr"]
-const legacyPublicPaths = new Set(["/", "/about", "/contact", "/menu"])
+const legacyPublicPaths = new Set(["/about", "/contact", "/menu"])
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl

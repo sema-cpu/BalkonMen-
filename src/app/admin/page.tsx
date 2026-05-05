@@ -3,24 +3,19 @@ import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
 import { ArrowLeft, CheckCircle2, FileText, Globe2, Layers3, LogOut, Package, ShieldCheck, Sparkles } from "lucide-react"
 import {
-  createCategoryAction,
-  createMenuItemAction,
   createSiteArticleAction,
-  deleteCategoryAction,
-  deleteMenuItemAction,
   deleteSiteArticleAction,
   initializeAdminAccessAction,
   signOutAdminAction,
   updateAboutContentAction,
-  updateCategoryAction,
   updateContactContentAction,
   updateHomeContentAction,
-  updateMenuItemAction,
   updateSiteArticleAction
 } from "@/app/admin/actions"
+import { CategoriesAdminSection } from "@/app/admin/categories-admin-section"
+import { ProductsAdminSection } from "@/app/admin/products-admin-section"
 import { defaultAboutContent, defaultContactContent, defaultHomeContent, mergeStringContent } from "@/data/site-content"
 import { Button } from "@/components/ui/button"
-import { menuCategoryIconOptions } from "@/lib/menu-category-icons"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
@@ -196,17 +191,11 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
     return acc
   }, {})
 
-  const categoryNameById = categories.reduce<Record<string, string>>((acc, category) => {
-    acc[category.id] = category.name
-    return acc
-  }, {})
-
   const statusMessage = resolvedSearchParams?.status ? statusMessageMap[resolvedSearchParams.status] : undefined
   const activeCategoryCount = categories.filter((category) => category.is_active).length
   const availableProductCount = menuItems.filter((item) => item.is_available).length
   const featuredProductCount = menuItems.filter((item) => item.is_featured).length
   const publishedArticleCount = siteArticles.filter((article) => article.is_published).length
-  const hasCategories = categories.length > 0
   const requestedWorkspace = resolvedSearchParams?.workspace ?? "overview"
   const workspace: AdminWorkspace = adminWorkspaceItems.some((item) => item.id === requestedWorkspace) ? (requestedWorkspace as AdminWorkspace) : "overview"
   const buildAdminHref = (nextWorkspace: AdminWorkspace) => {
@@ -217,12 +206,6 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-5 py-8 sm:px-8" id="main-content">
-      <datalist id="category-icon-options">
-        {menuCategoryIconOptions.map((iconOption) => {
-          return <option key={iconOption.value} value={iconOption.value}>{iconOption.label}</option>
-        })}
-      </datalist>
-
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border/80 pb-5">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-primary/15 p-2">
@@ -281,7 +264,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
         </section>
       ) : null}
 
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr),400px]">
+      <div className={`grid items-start gap-6 ${workspace === "products" || workspace === "categories" ? "" : "xl:grid-cols-[minmax(0,1fr),400px]"}`}>
         <section className="space-y-6">
           {workspace === "overview" ? (
             <section className="rounded-xl border border-border/80 bg-card/70 p-6">
@@ -814,255 +797,13 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
             </div>
           </section> : null}
 
-          {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-categories">
-            <div className="mb-5">
-              <h2 className="font-heading text-2xl">Kategorileri Yonet</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Sayfadan ayrilmadan gorunurluk, sira ve detaylari duzenleyin.</p>
-            </div>
-            <div className="space-y-3">
-              {categories.length === 0 ? (
-                <p className="rounded-lg border border-border/70 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-                  Henuz kategori yok. Sagdaki panelden kategori olusturun.
-                </p>
-              ) : null}
-              {categories.map((category, index) => {
-                return (
-                  <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={category.id} open={index === 0}>
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
-                      <div>
-                        <p className="font-medium text-foreground">{category.name}</p>
-                        <p className="text-xs text-muted-foreground">{category.description || "Aciklama yok"}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="rounded-full border border-border/70 px-2 py-1 text-muted-foreground">Sira {category.display_order}</span>
-                        <span
-                          className={`rounded-full px-2 py-1 ${
-                            category.is_active
-                              ? "border border-success/30 bg-success/10 text-success"
-                              : "border border-warning/30 bg-warning/10 text-warning"
-                          }`}
-                        >
-                          {category.is_active ? "Gorunur" : "Gizli"}
-                        </span>
-                      </div>
-                    </summary>
-                    <div className="border-t border-border/70 px-4 py-4">
-                      <form action={updateCategoryAction} className="grid gap-3 md:grid-cols-2">
-                        <input name="categoryId" type="hidden" value={category.id} />
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`category-name-${category.id}`}>
-                            Ad
-                          </label>
-                          <input
-                            className={inputClassName}
-                            defaultValue={category.name}
-                            id={`category-name-${category.id}`}
-                            name="name"
-                            required
-                            type="text"
-                          />
-                        </div>
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`category-order-${category.id}`}>
-                            Gosterim sirasi
-                          </label>
-                          <input className={inputClassName} defaultValue={category.display_order} id={`category-order-${category.id}`} name="displayOrder" required type="number" />
-                        </div>
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`category-icon-${category.id}`}>
-                            Ikon anahtari
-                          </label>
-                          <input
-                            className={inputClassName}
-                            defaultValue={category.icon_name}
-                            id={`category-icon-${category.id}`}
-                            list="category-icon-options"
-                            name="iconName"
-                            placeholder="utensils-crossed"
-                            type="text"
-                          />
-                          <p className="mt-1 text-xs text-muted-foreground">Varsayilan ikonu kullanmak icin bos birakin.</p>
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="mb-2 block text-sm" htmlFor={`category-image-${category.id}`}>
-                            Dairesel gorsel URL
-                          </label>
-                          <input
-                            className={inputClassName}
-                            defaultValue={category.image_url}
-                            id={`category-image-${category.id}`}
-                            name="imageUrl"
-                            placeholder="https://images.example.com/category.jpg"
-                            type="url"
-                          />
-                          <p className="mt-1 text-xs text-muted-foreground">Ust menu dairelerinde kullanilir. Otomatik gorsel icin bos birakin.</p>
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="mb-2 block text-sm" htmlFor={`category-description-${category.id}`}>
-                            Aciklama
-                          </label>
-                          <textarea
-                            className={textareaClassName}
-                            defaultValue={category.description}
-                            id={`category-description-${category.id}`}
-                            name="description"
-                          />
-                        </div>
-                        <label className="inline-flex items-center gap-2 text-sm">
-                          <input className={checkboxClassName} defaultChecked={category.is_active} name="isActive" type="checkbox" />
-                          Kategori gorunur
-                        </label>
-                        <div className="md:col-span-2 flex flex-wrap gap-2">
-                          <Button type="submit">Kategoriyi Kaydet</Button>
-                        </div>
-                      </form>
-                      <form action={deleteCategoryAction} className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
-                        <input name="categoryId" type="hidden" value={category.id} />
-                        <input className={inputClassName} name="confirmation" placeholder='Silmek icin "DELETE" yazin' required type="text" />
-                        <Button type="submit" variant="destructive">
-                          Kategoriyi Sil
-                        </Button>
-                      </form>
-                    </div>
-                  </details>
-                )
-              })}
-            </div>
-          </section> : null}
+          {workspace === "categories" ? <CategoriesAdminSection categories={categories} menuItems={menuItems} /> : null}
 
-          {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="manage-products">
-            <div className="mb-5">
-              <h2 className="font-heading text-2xl">Urunleri Yonet</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Hizli duzenleme icin tum urun ayarlari urun bazinda gruplanmistir.</p>
-            </div>
-            <div className="space-y-3">
-              {menuItems.length === 0 ? (
-                <p className="rounded-lg border border-border/70 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-                  Henuz urun yok. Sagdaki panelden urun olusturun.
-                </p>
-              ) : null}
-              {menuItems.map((item, index) => {
-                const itemTags = tagsByItem[item.id] ?? []
-                const categoryName = categoryNameById[item.category_id] ?? "Bilinmeyen kategori"
+          {workspace === "products" ? <ProductsAdminSection categories={categories} menuItems={menuItems} tagsByItem={tagsByItem} /> : null}
 
-                return (
-                  <details className="overflow-hidden rounded-lg border border-border/70 bg-background/45" key={item.id} open={index === 0}>
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
-                      <div>
-                        <p className="font-medium text-foreground">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {categoryName} • ₺{item.price.toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <span
-                          className={`rounded-full px-2 py-1 ${
-                            item.is_available
-                              ? "border border-success/30 bg-success/10 text-success"
-                              : "border border-warning/30 bg-warning/10 text-warning"
-                          }`}
-                        >
-                          {item.is_available ? "Mevcut" : "Mevcut degil"}
-                        </span>
-                        <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-primary">
-                          {item.is_featured ? "One cikan" : "Standart"}
-                        </span>
-                      </div>
-                    </summary>
-                    <div className="border-t border-border/70 px-4 py-4">
-                      <form action={updateMenuItemAction} className="grid gap-3 md:grid-cols-2">
-                        <input name="itemId" type="hidden" value={item.id} />
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`item-name-${item.id}`}>
-                            Urun adi
-                          </label>
-                          <input
-                            className={inputClassName}
-                            defaultValue={item.name}
-                            id={`item-name-${item.id}`}
-                            name="name"
-                            required
-                            type="text"
-                          />
-                        </div>
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`item-category-${item.id}`}>
-                            Kategori
-                          </label>
-                          <select className={inputClassName} defaultValue={item.category_id} id={`item-category-${item.id}`} name="categoryId" required>
-                            {categories.map((category) => {
-                              return (
-                                <option key={category.id} value={category.id}>
-                                  {category.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`item-price-${item.id}`}>
-                            Fiyat
-                          </label>
-                          <input className={inputClassName} defaultValue={item.price} id={`item-price-${item.id}`} name="price" required step="0.01" type="number" />
-                        </div>
-                        <div>
-                          <label className="mb-2 block text-sm" htmlFor={`item-order-${item.id}`}>
-                            Gosterim sirasi
-                          </label>
-                          <input className={inputClassName} defaultValue={item.display_order} id={`item-order-${item.id}`} name="displayOrder" required type="number" />
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="mb-2 block text-sm" htmlFor={`item-description-${item.id}`}>
-                            Aciklama
-                          </label>
-                          <textarea
-                            className={textareaClassName}
-                            defaultValue={item.description}
-                            id={`item-description-${item.id}`}
-                            name="description"
-                          />
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="mb-2 block text-sm" htmlFor={`item-image-${item.id}`}>
-                            Gorsel URL
-                          </label>
-                          <input className={inputClassName} defaultValue={item.image_url ?? ""} id={`item-image-${item.id}`} name="imageUrl" type="url" />
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="mb-2 block text-sm" htmlFor={`item-tags-${item.id}`}>
-                            Etiketler (virgulle ayirin)
-                          </label>
-                          <input className={inputClassName} defaultValue={itemTags.join(",")} id={`item-tags-${item.id}`} name="tags" type="text" />
-                        </div>
-                        <label className="inline-flex items-center gap-2 text-sm">
-                          <input className={checkboxClassName} defaultChecked={item.is_available} name="isAvailable" type="checkbox" />
-                          Mevcut
-                        </label>
-                        <label className="inline-flex items-center gap-2 text-sm">
-                          <input className={checkboxClassName} defaultChecked={item.is_featured} name="isFeatured" type="checkbox" />
-                          One cikan
-                        </label>
-                        <div className="md:col-span-2 flex flex-wrap gap-2">
-                          <Button type="submit">Urunu Kaydet</Button>
-                        </div>
-                      </form>
-
-                      <form action={deleteMenuItemAction} className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
-                        <input name="itemId" type="hidden" value={item.id} />
-                        <input className={inputClassName} name="confirmation" placeholder='Silmek icin "DELETE" yazin' required type="text" />
-                        <Button type="submit" variant="destructive">
-                          Urunu Sil
-                        </Button>
-                      </form>
-                    </div>
-                  </details>
-                )
-              })}
-            </div>
-          </section> : null}
         </section>
 
-        <aside className="space-y-6 xl:sticky xl:top-6">
+        {workspace !== "products" && workspace !== "categories" ? <aside className="space-y-6 xl:sticky xl:top-6">
           {workspace === "overview" ? (
             <section className="rounded-xl border border-border/80 bg-card/70 p-6">
               <h2 className="font-heading text-xl">Tasarim Plani</h2>
@@ -1134,123 +875,7 @@ const AdminPage = async ({ searchParams }: AdminPageProps) => {
             </form>
           </section> : null}
 
-          {workspace === "categories" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-category">
-            <h2 className="font-heading text-xl">Kategori Olustur</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Siralama ve gorunurluk ayarlariyla yeni bir menu grubu ekleyin.</p>
-            <form action={createCategoryAction} className="mt-4 grid gap-3">
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-category-name">
-                  Ad
-                </label>
-                <input className={inputClassName} id="create-category-name" name="name" required type="text" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-category-order">
-                  Gosterim sirasi
-                </label>
-                <input className={inputClassName} defaultValue={1} id="create-category-order" name="displayOrder" required type="number" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-category-icon">
-                  Ikon anahtari
-                </label>
-                <input className={inputClassName} id="create-category-icon" list="category-icon-options" name="iconName" placeholder="utensils-crossed" type="text" />
-                <p className="mt-1 text-xs text-muted-foreground">Varsayilan ikonu kullanmak icin bos birakin.</p>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-category-image">
-                  Dairesel gorsel URL
-                </label>
-                <input className={inputClassName} id="create-category-image" name="imageUrl" placeholder="https://images.example.com/category.jpg" type="url" />
-                <p className="mt-1 text-xs text-muted-foreground">Ust menu dairelerinde kullanilir. Otomatik gorsel icin bos birakin.</p>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-category-description">
-                  Aciklama
-                </label>
-                <textarea className={textareaClassName} id="create-category-description" name="description" />
-              </div>
-              <label className="inline-flex items-center gap-2 text-sm">
-                <input className={checkboxClassName} defaultChecked name="isActive" type="checkbox" />
-                Kategori gorunur
-              </label>
-              <Button type="submit">Kategori Olustur</Button>
-            </form>
-          </section> : null}
-
-          {workspace === "products" ? <section className="rounded-xl border border-border/80 bg-card/70 p-6" id="create-product">
-            <h2 className="font-heading text-xl">Urun Olustur</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Fiyat, etiket ve stok bilgileriyle yeni bir menu urunu ekleyin.</p>
-            {!hasCategories ? (
-              <p className="mt-3 rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                Urun eklemeden once en az bir kategori olusturun.
-              </p>
-            ) : null}
-            <form action={createMenuItemAction} className="mt-4 grid gap-3">
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-name">
-                  Urun adi
-                </label>
-                <input className={inputClassName} id="create-product-name" name="name" required type="text" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-category">
-                  Kategori
-                </label>
-                <select className={inputClassName} disabled={!hasCategories} id="create-product-category" name="categoryId" required>
-                  {categories.map((category) => {
-                    return (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    )
-                  })}
-                </select>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-price">
-                  Fiyat
-                </label>
-                <input className={inputClassName} id="create-product-price" name="price" required step="0.01" type="number" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-order">
-                  Gosterim sirasi
-                </label>
-                <input className={inputClassName} defaultValue={1} id="create-product-order" name="displayOrder" required type="number" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-description">
-                  Aciklama
-                </label>
-                <textarea className={textareaClassName} id="create-product-description" name="description" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-image">
-                  Gorsel URL
-                </label>
-                <input className={inputClassName} id="create-product-image" name="imageUrl" placeholder="https://cdn..." type="url" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm" htmlFor="create-product-tags">
-                  Etiketler (virgulle ayirin)
-                </label>
-                <input className={inputClassName} id="create-product-tags" name="tags" placeholder="bestseller,vegetarian" type="text" />
-              </div>
-              <label className="inline-flex items-center gap-2 text-sm">
-                <input className={checkboxClassName} defaultChecked name="isAvailable" type="checkbox" />
-                Mevcut
-              </label>
-              <label className="inline-flex items-center gap-2 text-sm">
-                <input className={checkboxClassName} name="isFeatured" type="checkbox" />
-                One cikan
-              </label>
-              <Button disabled={!hasCategories} type="submit">
-                Urun Olustur
-              </Button>
-            </form>
-          </section> : null}
-        </aside>
+        </aside> : null}
       </div>
     </main>
   )

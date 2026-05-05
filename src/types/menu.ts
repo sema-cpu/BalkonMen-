@@ -1,4 +1,5 @@
 export type MenuTag = "vegan" | "vegetarian" | "spicy" | "containsNuts" | "glutenFree" | "bestseller"
+export type DonenessRating = "rare" | "mediumRare" | "medium" | "mediumWell" | "wellDone"
 
 export type MenuCategory = {
   id: string
@@ -17,6 +18,7 @@ export type MenuItem = {
   price: number
   image?: string
   tags: MenuTag[]
+  donenessRating?: DonenessRating
   isFeatured: boolean
   isAvailable: boolean
 }

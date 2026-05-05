@@ -1,5 +1,7 @@
 import Image from "next/image"
+import { Flame } from "lucide-react"
 import type { Locale } from "@/i18n/config"
+import { getDonenessLabel, getDonenessOption } from "@/lib/doneness"
 import { cn } from "@/lib/utils"
 import { PillBadge } from "@/components/ui/pill-badge"
 import type { MenuItem } from "@/types/menu"
@@ -20,7 +22,7 @@ const tagLabelMap: Record<MenuItem["tags"][number], string> = {
 }
 
 const MenuCard = ({ item, locale, className }: MenuCardProps) => {
-  void locale
+  const donenessOption = item.donenessRating ? getDonenessOption(item.donenessRating) : undefined
 
   return (
     <article
@@ -50,6 +52,15 @@ const MenuCard = ({ item, locale, className }: MenuCardProps) => {
           </p>
         </div>
         <p className="text-sm text-muted-foreground">{item.description}</p>
+        {item.donenessRating && donenessOption ? (
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-orange-400/30 bg-orange-400/10 px-3 py-2 text-sm">
+            <span className="inline-flex items-center gap-2 font-medium text-orange-100">
+              <Flame aria-hidden className="size-4" />
+              Pisme: {getDonenessLabel(item.donenessRating, locale)}
+            </span>
+            <span className="shrink-0 rounded-full bg-background/60 px-2 py-0.5 text-xs text-orange-100">{donenessOption.temperature}</span>
+          </div>
+        ) : null}
         <div className="flex flex-wrap gap-2">
           {item.tags.map((tag) => {
             return <PillBadge className="normal-case tracking-normal" key={tag} label={tagLabelMap[tag]} />

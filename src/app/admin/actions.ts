@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
+import { isDonenessRating } from "@/lib/doneness"
 import { normalizeMenuCategoryIconName } from "@/lib/menu-category-icons"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { isRecoverableSupabaseAuthError } from "@/lib/supabase/auth-errors"
@@ -41,6 +42,16 @@ const parseInteger = (value: FormDataEntryValue | null, fieldName: string) => {
   return parsed
 }
 
+const parsePositiveInteger = (value: FormDataEntryValue | null, fieldName: string) => {
+  const parsed = parseInteger(value, fieldName)
+
+  if (parsed < 1) {
+    throw new Error(`${fieldName} must be at least 1`)
+  }
+
+  return parsed
+}
+
 const parseNumber = (value: FormDataEntryValue | null, fieldName: string) => {
   const parsed = Number(String(value ?? "").trim())
 
@@ -53,6 +64,102 @@ const parseNumber = (value: FormDataEntryValue | null, fieldName: string) => {
 
 const parseBoolean = (value: FormDataEntryValue | null) => {
   return String(value ?? "") === "on"
+}
+
+const parseDonenessRating = (value: FormDataEntryValue | null) => {
+  const parsed = String(value ?? "").trim()
+
+  if (!parsed) {
+    return null
+  }
+
+  if (!isDonenessRating(parsed)) {
+    throw new Error("Doneness rating is invalid")
+  }
+
+  return parsed
+}
+
+const normalizeMenuItemDisplayOrder = async (
+  supabaseAdmin: ReturnType<typeof createSupabaseAdminClient>,
+  categoryId: string,
+  preferredItemId?: string,
+  preferredPosition?: number
+) => {
+  const { data: items, error } = await supabaseAdmin
+    .from("menu_items")
+    .select("id, display_order, created_at")
+    .eq("category_id", categoryId)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true })
+
+  if (error) {
+    throw error
+  }
+
+  const orderedItems = [...items]
+
+  if (preferredItemId && preferredPosition) {
+    const movingItem = orderedItems.find((item) => item.id === preferredItemId)
+
+    if (movingItem) {
+      const remainingItems = orderedItems.filter((item) => item.id !== preferredItemId)
+      const targetIndex = Math.min(Math.max(preferredPosition, 1), remainingItems.length + 1) - 1
+      remainingItems.splice(targetIndex, 0, movingItem)
+      orderedItems.splice(0, orderedItems.length, ...remainingItems)
+    }
+  }
+
+  const results = await Promise.all(
+    orderedItems.map((item, index) => {
+      return supabaseAdmin.from("menu_items").update({ display_order: index + 1 }).eq("id", item.id)
+    })
+  )
+  const updateError = results.find((result) => result.error)?.error
+
+  if (updateError) {
+    throw updateError
+  }
+}
+
+const normalizeCategoryDisplayOrder = async (
+  supabaseAdmin: ReturnType<typeof createSupabaseAdminClient>,
+  preferredCategoryId?: string,
+  preferredPosition?: number
+) => {
+  const { data: categories, error } = await supabaseAdmin
+    .from("menu_categories")
+    .select("id, display_order, created_at")
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true })
+
+  if (error) {
+    throw error
+  }
+
+  const orderedCategories = [...categories]
+
+  if (preferredCategoryId && preferredPosition) {
+    const movingCategory = orderedCategories.find((category) => category.id === preferredCategoryId)
+
+    if (movingCategory) {
+      const remainingCategories = orderedCategories.filter((category) => category.id !== preferredCategoryId)
+      const targetIndex = Math.min(Math.max(preferredPosition, 1), remainingCategories.length + 1) - 1
+      remainingCategories.splice(targetIndex, 0, movingCategory)
+      orderedCategories.splice(0, orderedCategories.length, ...remainingCategories)
+    }
+  }
+
+  const results = await Promise.all(
+    orderedCategories.map((category, index) => {
+      return supabaseAdmin.from("menu_categories").update({ display_order: index + 1 }).eq("id", category.id)
+    })
+  )
+  const updateError = results.find((result) => result.error)?.error
+
+  if (updateError) {
+    throw updateError
+  }
 }
 
 const parseTags = (value: FormDataEntryValue | null): MenuTag[] => {
@@ -349,24 +456,29 @@ const createCategoryAction = async (formData: FormData) => {
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
+  const displayOrder = parsePositiveInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isActive = parseBoolean(formData.get("isActive"))
 
-  const { error } = await supabaseAdmin.from("menu_categories").insert({
-    name,
-    description,
-    icon_name: iconName,
-    image_url: imageUrl ?? "",
-    display_order: displayOrder,
-    is_active: isActive
-  })
+  const { data: insertedCategory, error } = await supabaseAdmin
+    .from("menu_categories")
+    .insert({
+      name,
+      description,
+      icon_name: iconName,
+      image_url: imageUrl ?? "",
+      display_order: displayOrder,
+      is_active: isActive
+    })
+    .select("id")
+    .single()
 
   if (error) {
     throw error
   }
 
+  await normalizeCategoryDisplayOrder(supabaseAdmin, insertedCategory.id, displayOrder)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=category-created")
+  redirect("/admin?workspace=categories&status=category-created")
 }
 
 const updateCategoryAction = async (formData: FormData) => {
@@ -377,7 +489,7 @@ const updateCategoryAction = async (formData: FormData) => {
   const description = parseString(formData.get("description"))
   const iconName = normalizeMenuCategoryIconName(parseString(formData.get("iconName")))
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
+  const displayOrder = parsePositiveInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isActive = parseBoolean(formData.get("isActive"))
 
   const { error } = await supabaseAdmin
@@ -396,8 +508,9 @@ const updateCategoryAction = async (formData: FormData) => {
     throw error
   }
 
+  await normalizeCategoryDisplayOrder(supabaseAdmin, categoryId, displayOrder)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=category-updated")
+  redirect("/admin?workspace=categories&status=category-updated")
 }
 
 const deleteCategoryAction = async (formData: FormData) => {
@@ -406,8 +519,8 @@ const deleteCategoryAction = async (formData: FormData) => {
   const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori kimligi")
   const confirmation = parseRequiredString(formData.get("confirmation"), "Silme onayi")
 
-  if (confirmation !== "DELETE") {
-    throw new Error('Type "DELETE" to confirm category deletion')
+  if (confirmation.toLowerCase() !== "delete") {
+    throw new Error('Type "delete" to confirm category deletion')
   }
 
   const { error } = await supabaseAdmin.from("menu_categories").delete().eq("id", categoryId)
@@ -416,8 +529,9 @@ const deleteCategoryAction = async (formData: FormData) => {
     throw error
   }
 
+  await normalizeCategoryDisplayOrder(supabaseAdmin)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=category-deleted")
+  redirect("/admin?workspace=categories&status=category-deleted")
 }
 
 const createMenuItemAction = async (formData: FormData) => {
@@ -428,9 +542,10 @@ const createMenuItemAction = async (formData: FormData) => {
   const description = parseString(formData.get("description"))
   const price = parseNumber(formData.get("price"), "Fiyat")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
+  const displayOrder = parsePositiveInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isAvailable = parseBoolean(formData.get("isAvailable"))
   const isFeatured = parseBoolean(formData.get("isFeatured"))
+  const donenessRating = parseDonenessRating(formData.get("donenessRating"))
   const tags = parseTags(formData.get("tags"))
 
   const { data: insertedItem, error: insertError } = await supabaseAdmin
@@ -441,6 +556,7 @@ const createMenuItemAction = async (formData: FormData) => {
       description,
       price,
       image_url: imageUrl,
+      doneness_rating: donenessRating,
       display_order: displayOrder,
       is_available: isAvailable,
       is_featured: isFeatured
@@ -467,22 +583,30 @@ const createMenuItemAction = async (formData: FormData) => {
     }
   }
 
+  await normalizeMenuItemDisplayOrder(supabaseAdmin, categoryId, insertedItem.id, displayOrder)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=product-created")
+  redirect("/admin?workspace=products&status=product-created")
 }
 
 const updateMenuItemAction = async (formData: FormData) => {
   const { supabaseAdmin } = await ensureAdminAccess()
 
   const itemId = parseRequiredString(formData.get("itemId"), "Item id")
+  const { data: existingItem, error: existingItemError } = await supabaseAdmin.from("menu_items").select("category_id").eq("id", itemId).single()
+
+  if (existingItemError) {
+    throw existingItemError
+  }
+
   const categoryId = parseRequiredString(formData.get("categoryId"), "Kategori")
   const name = parseRequiredString(formData.get("name"), "Product name")
   const description = parseString(formData.get("description"))
   const price = parseNumber(formData.get("price"), "Fiyat")
   const imageUrl = parseOptionalString(formData.get("imageUrl"))
-  const displayOrder = parseInteger(formData.get("displayOrder"), "Gosterim sirasi")
+  const displayOrder = parsePositiveInteger(formData.get("displayOrder"), "Gosterim sirasi")
   const isAvailable = parseBoolean(formData.get("isAvailable"))
   const isFeatured = parseBoolean(formData.get("isFeatured"))
+  const donenessRating = parseDonenessRating(formData.get("donenessRating"))
   const tags = parseTags(formData.get("tags"))
 
   const { error: updateError } = await supabaseAdmin
@@ -493,6 +617,7 @@ const updateMenuItemAction = async (formData: FormData) => {
       description,
       price,
       image_url: imageUrl,
+      doneness_rating: donenessRating,
       display_order: displayOrder,
       is_available: isAvailable,
       is_featured: isFeatured
@@ -524,8 +649,13 @@ const updateMenuItemAction = async (formData: FormData) => {
     }
   }
 
+  if (existingItem.category_id !== categoryId) {
+    await normalizeMenuItemDisplayOrder(supabaseAdmin, existingItem.category_id)
+  }
+
+  await normalizeMenuItemDisplayOrder(supabaseAdmin, categoryId, itemId, displayOrder)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=product-updated")
+  redirect("/admin?workspace=products&status=product-updated")
 }
 
 const deleteMenuItemAction = async (formData: FormData) => {
@@ -534,8 +664,14 @@ const deleteMenuItemAction = async (formData: FormData) => {
   const itemId = parseRequiredString(formData.get("itemId"), "Item id")
   const confirmation = parseRequiredString(formData.get("confirmation"), "Silme onayi")
 
-  if (confirmation !== "DELETE") {
-    throw new Error('Type "DELETE" to confirm product deletion')
+  if (confirmation.toLowerCase() !== "delete") {
+    throw new Error('Type "delete" to confirm product deletion')
+  }
+
+  const { data: existingItem, error: existingItemError } = await supabaseAdmin.from("menu_items").select("category_id").eq("id", itemId).single()
+
+  if (existingItemError) {
+    throw existingItemError
   }
 
   const { error } = await supabaseAdmin.from("menu_items").delete().eq("id", itemId)
@@ -544,8 +680,9 @@ const deleteMenuItemAction = async (formData: FormData) => {
     throw error
   }
 
+  await normalizeMenuItemDisplayOrder(supabaseAdmin, existingItem.category_id)
   revalidatePublicAndAdminPaths()
-  redirect("/admin?status=product-deleted")
+  redirect("/admin?workspace=products&status=product-deleted")
 }
 
 const signOutAdminAction = async () => {

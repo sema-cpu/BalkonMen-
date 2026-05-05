@@ -37,6 +37,7 @@ Dark-themed promotional website + QR menu + admin panel built with Next.js, Type
     - `supabase/migrations/001_initial_schema.sql`
     - `supabase/migrations/002_site_content_management.sql`
     - `supabase/migrations/003_bilingual_content_support.sql`
+    - `supabase/migrations/004_menu_item_doneness_rating.sql`
 5. Sign in through your private admin URL shared only with authorized staff. If no admin exists yet, initialize the signed-in account as the first admin from the page.
 6. Run development server:
    - `npm run dev`

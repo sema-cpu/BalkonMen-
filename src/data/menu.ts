@@ -18,6 +18,7 @@ type MenuItemSeed = {
   price: number
   image?: string
   tags: MenuItem["tags"]
+  donenessRating?: MenuItem["donenessRating"]
   isFeatured: boolean
   isAvailable: boolean
 }
@@ -125,6 +126,18 @@ const menuItemSeeds: MenuItemSeed[] = [
     isAvailable: true
   },
   {
+    id: "steak-eggs",
+    categoryId: "brunch",
+    name: "Izgara Dana & Yumurta",
+    description: "Dokum tavada dinlendirilmis dana eti, poÅŸe yumurta ve otlu tereyagi",
+    price: 18.5,
+    image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=1200&q=80",
+    tags: ["bestseller", "glutenFree"],
+    donenessRating: "medium",
+    isFeatured: false,
+    isAvailable: true
+  },
+  {
     id: "eggs-brioche",
     categoryId: "brunch",
     name: "Brioche Eggs Royale",
@@ -182,6 +195,7 @@ const getLocalizedMenuFallback = (locale: Locale): { categories: MenuCategory[];
         price: item.price,
         image: item.image,
         tags: item.tags,
+        donenessRating: item.donenessRating,
         isFeatured: item.isFeatured,
         isAvailable: item.isAvailable
       }

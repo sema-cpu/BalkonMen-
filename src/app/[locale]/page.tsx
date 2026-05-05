@@ -135,7 +135,7 @@ const LocalizedHomePage = async ({ params }: LocalizedHomePageProps) => {
             {gallery.map((image, index) => {
               return (
                 <div className="relative h-64 overflow-hidden rounded-2xl border border-border/70 bg-card/70" key={image}>
-                  <Image alt={`Balkon Cafe scene ${index + 1}`} className="h-full w-full object-cover transition duration-500 hover:scale-105" fill sizes="(max-width: 768px) 100vw, 33vw" src={image} />
+                  <Image alt={`Balkon Cafe ortamı ${index + 1}`} className="h-full w-full object-cover transition duration-500 hover:scale-105" fill sizes="(max-width: 768px) 100vw, 33vw" src={image} />
                 </div>
               )
             })}
